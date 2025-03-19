@@ -1,0 +1,249 @@
+/* Account page specific styles */
+:root {
+    --primary: #1a3a6c;    /* Darker blue */
+    --secondary: #d32f2f;  /* Red */
+    --accent: #0d47a1;     /* Deep blue */
+    --light: #f5f5f5;      /* Off-white */
+    --dark: #0d1b2a;       /* Navy blue */
+    --hover-red: #b71c1c;  /* Darker red for hover states */
+    --hover-blue: #002171; /* Darker blue for hover states */
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --card-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+.account-section {
+    margin-bottom: 2.5rem;
+    background-color: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.8rem;
+    transition: var(--transition);
+}
+
+.account-section:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profile-info {
+    margin-bottom: 1.8rem;
+}
+
+.profile-field {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.profile-field:hover {
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+.field-label {
+    font-weight: 600;
+    width: 180px;
+    color: var(--dark);
+    padding: 0.5rem 1rem;
+}
+
+.field-value {
+    flex: 1;
+    padding: 0.5rem 0;
+}
+
+.applications-list,
+.saved-jobs-list,
+.employer-jobs-list {
+    margin-top: 1.5rem;
+}
+
+.application-item,
+.job-item {
+    padding: 1.2rem;
+    border: 1px solid #eee;
+    border-radius: var(--card-radius);
+    margin-bottom: 1.2rem;
+    background-color: #f9f9f9;
+    transition: var(--transition);
+}
+
+.application-item:hover,
+.job-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.application-item h4,
+.job-item h4 {
+    margin-bottom: 0.8rem;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.application-meta,
+.job-meta {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+}
+
+.application-meta p,
+.job-meta p {
+    margin-bottom: 0.4rem;
+}
+
+.application-actions,
+.job-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.6rem;
+}
+
+/* Edit profile form styles */
+.edit-form-field {
+    margin-bottom: 1.8rem;
+}
+
+.edit-form-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+/* Admin dashboard styles */
+.admin-controls {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.8rem;
+    flex-wrap: wrap;
+}
+
+.admin-controls .btn {
+    min-width: 120px;
+    text-align: center;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.stat-box {
+    background-color: white;
+    border-radius: var(--card-radius);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 0.7rem;
+}
+
+.stat-label {
+    color: var(--dark);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Status indicators */
+.status-pending {
+    background-color: #f39c12;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.status-approved {
+    background-color: #27ae60;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.status-rejected {
+    background-color: var(--secondary);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    display: inline-block;
+    font-weight: 500;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .profile-field {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .field-label {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 0;
+    }
+
+    .admin-controls {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .admin-controls .btn {
+        width: 100%;
+    }
+
+    .stat-box {
+        padding: 1.2rem 0.8rem;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .application-actions,
+    .job-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .application-actions .btn,
+    .job-actions .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+}

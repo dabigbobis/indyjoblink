@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Independence High School - Career Center</title>
+    <!-- Include the authentication redirect script first -->
+    <script src="auth-redirect.js"></script>
+    <link rel="stylesheet" href="home-styles.css">
+</head>
+
+<body>
+<!-- Header -->
+<header>
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <h1>Indy JobLink</h1>
+            </div>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li id="job-listings-nav" style="display: none;"><a href="job-listings.html">Job Listings</a></li>
+                <li id="post-listings-nav" style="display: none;"><a href="#post-listings" onclick="showPage('post-listings')">Post Listings</a></li>
+                <li id="responses-nav" style="display: none;"><a href="#responses" onclick="showPage('responses')">Responses</a></li>
+                <!-- Dynamic logout link will be added by JavaScript -->
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Home Page -->
+<div id="home" class="page active">
+    <section class="hero">
+        <div class="container">
+            <h2>Find Your Perfect Job Opportunity</h2>
+            <p>Our Career Center connects Independence High students with local employers looking for talented
+                individuals.
+                Browse job listings, submit applications, and start your career journey today.</p>
+            <div class="hero-buttons" id="hero-buttons">
+                <a href="#jobs" class="btn btn-accent" onclick="showPage('jobs')">View Job Listings</a>
+                <a href="#employer" class="btn" onclick="showPage('employer')" id="post-job-button">Post a Job</a>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="card">
+                <h3>For Students:</h3>
+                <p>Browse through job listings posted by local employers looking for Independence High talent. When you
+                    find a
+                    position that interests you, simply click "Apply" and submit your information to get started on
+                    your career
+                    journey.</p>
+            </div>
+            <div class="card">
+                <h3>For Employers:</h3>
+                <p>Connect with our talented student body by posting job opportunities. Fill out our simple job
+                    submission
+                    form, and once approved by our guidance department, your listing will be visible to all Independence
+                    High
+                    students.</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Job Listings Page -->
+<div id="jobs" class="page" style="display: none;">
+    <!-- content as before -->
+</div>
+
+<!-- Employer Submission Page -->
+<div id="employer" class="page" style="display: none;">
+    <!-- content as before -->
+</div>
+
+<!-- Post Listings Page -->
+<div id="post-listings" class="page" style="display: none;">
+    <div class="container">
+        <h2 class="section-title">Post a New Job Listing</h2>
+        <div class="card">
+            <form id="post-listing-form">
+                <div class="form-group">
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" id="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="jobType">Job Type</label>
+                    <select id="jobType" required>
+                        <option value="">Select Job Type</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Temporary">Temporary</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="jobSalary">Expected Salary</label>
+                    <input type="text" id="jobSalary" required placeholder="e.g. $15/hour, $500/week">
+                </div>
+                <div class="form-group">
+                    <label for="jobLocation">Location</label>
+                    <input type="text" id="jobLocation" required placeholder="e.g. On-site, Remote, Hybrid">
+                </div>
+                <div class="form-group">
+                    <label for="jobDescription">Job Description</label>
+                    <textarea id="jobDescription" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="jobRequirements">Requirements</label>
+                    <textarea id="jobRequirements" rows="3" placeholder="List any skills, qualifications, or experience needed"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit for Approval</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="submission-confirmation" class="card" style="display: none;">
+            <h3>Job Listing Submitted!</h3>
+            <p>Your job listing has been submitted for review by our administrators.</p>
+            <p>Once approved, it will be visible to students.</p>
+            <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
+            <div class="form-group">
+                <button class="btn" onclick="document.getElementById('submission-confirmation').style.display='none'; document.getElementById('post-listing-form').style.display='block'; document.getElementById('post-listing-form').reset();">Post Another Listing</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Responses Page for Employers -->
+<div id="responses" class="page" style="display: none;">
+    <div class="container">
+        <h2 class="section-title">Student Applications</h2>
+        <div class="card">
+            <div id="responses-content">
+                <!-- Will be populated by JavaScript -->
+                <div class="no-responses" id="no-responses">
+                    <p>You don't have any student applications yet.</p>
+                    <p>Applications will appear here when students apply to your job listings.</p>
+                </div>
+
+                <div id="student-applications-list">
+                    <!-- This will be populated with applicants by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Panel -->
+<div id="admin" class="page" style="display: none;">
+    <!-- content as before -->
+</div>
+
+<!-- Apply Modal -->
+<div id="applyModal">
+    <!-- content as before -->
+</div>
+
+<!-- Application Success Modal -->
+<div id="applicationSuccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="modal-content" style="background-color: white; padding: 2rem; border-radius: 8px; max-width: 500px; text-align: center;">
+        <h3>Application Submitted!</h3>
+        <p>Your application has been successfully sent to the employer.</p>
+        <p>You can view the status in the "Applied Listings" tab.</p>
+        <button class="btn btn-primary" onclick="document.getElementById('applicationSuccessModal').style.display='none';">Close</button>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div>
+                <p>&copy; 2025 Independence High School Career Center</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Guidance Department</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="home-script.js"></script>
+<script>
+    // Add the job listings link for students and update navigation based on user type
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Update navigation based on user type
+        if (currentUser.type === 'student') {
+            document.getElementById('job-listings-nav').style.display = 'block';
+            // Hide Post a Job button for students
+            const postJobButton = document.getElementById('post-job-button');
+            if (postJobButton) {
+                postJobButton.style.display = 'none';
+            }
+        } else if (currentUser.type === 'employer') {
+            document.getElementById('post-listings-nav').style.display = 'block';
+            document.getElementById('responses-nav').style.display = 'block';
+        } else if (currentUser.type === 'admin') {
+            // Redirect admin directly to pending listings page
+            window.location.href = 'admin-pending.html';
+            return;
+        }
+
+        // Home link handling
+        const homeLink = document.querySelector('nav ul li a[href="#"]');
+        if (homeLink) {
+            homeLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.hash = '';
+                showPage('home');
+            });
+        }
+
+        // Set up job submission form handler
+        const postListingForm = document.getElementById('post-listing-form');
+        if (postListingForm) {
+            postListingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Get form data
+                const jobData = {
+                    id: 'job_' + Date.now(),
+                    title: document.getElementById('jobTitle').value,
+                    type: document.getElementById('jobType').value,
+                    salary: document.getElementById('jobSalary').value,
+                    location: document.getElementById('jobLocation').value,
+                    description: document.getElementById('jobDescription').value,
+                    requirements: document.getElementById('jobRequirements').value,
+                    company: currentUser.companyName,
+                    employerId: currentUser.email,
+                    status: 'pending',
+                    dateSubmitted: new Date().toISOString()
+                };
+
+                // Store in localStorage
+                const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+                pendingJobs.push(jobData);
+                localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+
+                // Show confirmation message
+                document.getElementById('referenceId').textContent = jobData.id;
+                document.getElementById('post-listing-form').style.display = 'none';
+                document.getElementById('submission-confirmation').style.display = 'block';
+            });
+        }
+
+        // Load student applications for employers
+        if (currentUser.type === 'employer') {
+            loadEmployerApplications(currentUser);
+        }
+    });
+
+    // Function to load applications for employers
+    function loadEmployerApplications(employer) {
+        const applications = JSON.parse(localStorage.getItem('applications')) || [];
+        const employerApplications = applications.filter(app => app.employerId === employer.email);
+
+        if (employerApplications.length > 0) {
+            document.getElementById('no-responses').style.display = 'none';
+
+            let applicationsHTML = '';
+            employerApplications.forEach(app => {
+                applicationsHTML += `
+                    <div class="application-item card">
+                        <h3>${app.jobTitle}</h3>
+                        <div class="application-details">
+                            <p><strong>Student Name:</strong> ${app.studentName}</p>
+                            <p><strong>Student ID:</strong> ${app.studentId}</p>
+                            <p><strong>Email:</strong> ${app.studentEmail}</p>
+                            <p><strong>Grade:</strong> ${app.studentGrade}</p>
+                            <p><strong>Applied:</strong> ${new Date(app.dateApplied).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('student-applications-list').innerHTML = applicationsHTML;
+        }
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Pending Listings</title>
+  <!-- Include the authentication redirect script first -->
+  <script src="auth-redirect.js"></script>
+  <link rel="stylesheet" href="home-styles.css">
+  <style>
+    .pending-job-card {
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .job-title {
+      margin: 0;
+      color: var(--primary);
+    }
+
+    .job-date {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    .job-detail {
+      margin-bottom: 0.5rem;
+    }
+
+    .approval-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+
+    .btn-approve {
+      background-color: #27ae60;
+    }
+
+    .btn-approve:hover {
+      background-color: #219653;
+    }
+
+    .btn-deny {
+      background-color: #e74c3c;
+    }
+
+    .btn-deny:hover {
+      background-color: #c0392b;
+    }
+
+    .no-pending-jobs {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Header -->
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <h1>Indy JobLink</h1>
+      </div>
+      <ul>
+        <li><a href="#" id="pending-tab" class="active">Pending Listings</a></li>
+        <li><a href="#approved" id="approved-tab">Approved Listings</a></li>
+        <!-- Dynamic logout link will be added by JavaScript -->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h2 class="section-title">Pending Job Listings</h2>
+
+    <div id="pending-listings-section">
+      <div id="no-pending-jobs" class="no-pending-jobs">
+        <p>There are no pending job listings to review at this time.</p>
+        <p>New employer submissions will appear here for your approval.</p>
+      </div>
+
+      <div id="pending-jobs-list">
+        <!-- Will be populated with pending jobs by JavaScript -->
+      </div>
+    </div>
+
+    <div id="approved-listings-section" style="display: none;">
+      <div class="card">
+        <div id="no-approved-jobs" class="no-pending-jobs">
+          <p>There are no approved job listings to display.</p>
+        </div>
+
+        <div id="approved-jobs-list">
+          <!-- Will be populated with approved jobs by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div>
+        <p>&copy; 2025 Independence High School Career Center</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact Guidance Department</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Check authentication
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is logged in and is an admin
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    if (currentUser.type !== 'admin') {
+      window.location.href = 'home.html';
+      return;
+    }
+
+    // Setup navigation
+    setupNavigation(currentUser);
+
+    // Load pending job listings
+    loadPendingJobs();
+
+    // Set up tab navigation
+    document.getElementById('pending-tab').addEventListener('click', function(e) {
+      e.preventDefault();
+      showPendingListings();
+    });
+
+    document.getElementById('approved-tab').addEventListener('click', function(e) {
+      e.preventDefault();
+      showApprovedListings();
+    });
+  });
+
+  // Setup navigation
+  function setupNavigation(currentUser) {
+    const navContainer = document.querySelector('nav ul');
+    if (!navContainer) return;
+
+    // Check if the logout link already exists
+    const existingLogoutLink = document.getElementById('logout-link');
+
+    if (currentUser && !existingLogoutLink) {
+      // Create logout link
+      const logoutItem = document.createElement('li');
+      const logoutLink = document.createElement('a');
+      logoutLink.href = '#';
+      logoutLink.textContent = 'Logout';
+      logoutLink.id = 'logout-link';
+      logoutLink.addEventListener('click', logout);
+      logoutItem.appendChild(logoutLink);
+
+      // Add to navigation
+      navContainer.appendChild(logoutItem);
+    }
+  }
+
+  // Show pending listings tab
+  function showPendingListings() {
+    document.getElementById('pending-listings-section').style.display = 'block';
+    document.getElementById('approved-listings-section').style.display = 'none';
+
+    // Update section title
+    document.querySelector('.section-title').textContent = "Pending Job Listings";
+
+    // Update active tab
+    document.getElementById('approved-tab').classList.remove('active');
+    document.getElementById('pending-tab').classList.add('active');
+
+    // Reload pending jobs
+    loadPendingJobs();
+  }
+
+  // Load pending jobs - UPDATED FUNCTION TO FIX DUPLICATION
+  function loadPendingJobs() {
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+
+    // Deduplicate jobs based on ID before displaying
+    const uniqueJobMap = {};
+    pendingJobs.forEach(job => {
+      uniqueJobMap[job.id] = job;
+    });
+
+    const uniquePendingJobs = Object.values(uniqueJobMap);
+
+    if (uniquePendingJobs.length > 0) {
+      document.getElementById('no-pending-jobs').style.display = 'none';
+      let pendingJobsHTML = '';
+
+      uniquePendingJobs.forEach(job => {
+        const submittedDate = new Date(job.dateSubmitted).toLocaleDateString();
+
+        pendingJobsHTML += `
+          <div class="pending-job-card" id="pending-${job.id}">
+              <div class="job-header">
+                  <h3 class="job-title">${job.title}</h3>
+                  <span class="job-date">Submitted: ${submittedDate}</span>
+              </div>
+              <div class="job-detail"><strong>Company:</strong> ${job.company}</div>
+              <div class="job-detail"><strong>Type:</strong> ${job.type}</div>
+              <div class="job-detail"><strong>Salary:</strong> ${job.salary}</div>
+              <div class="job-detail"><strong>Location:</strong> ${job.location || 'Not specified'}</div>
+              <div class="job-detail"><strong>Description:</strong> ${job.description}</div>
+              ${job.requirements ? `<div class="job-detail"><strong>Requirements:</strong> ${job.requirements}</div>` : ''}
+
+              <div class="approval-actions">
+                  <button class="btn btn-approve" onclick="approveJob('${job.id}')">Approve</button>
+                  <button class="btn btn-deny" onclick="denyJob('${job.id}')">Deny</button>
+              </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('pending-jobs-list').innerHTML = pendingJobsHTML;
+    } else {
+      document.getElementById('no-pending-jobs').style.display = 'block';
+      document.getElementById('pending-jobs-list').innerHTML = '';
+    }
+  }
+
+  // Approve a job
+  function approveJob(jobId) {
+    // Get pending jobs
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const jobIndex = pendingJobs.findIndex(job => job.id === jobId);
+
+    if (jobIndex !== -1) {
+      const job = pendingJobs[jobIndex];
+      job.status = 'approved';
+      job.dateApproved = new Date().toISOString();
+
+      // Remove from pending jobs
+      pendingJobs.splice(jobIndex, 1);
+      localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+
+      // Add to approved jobs
+      const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+      approvedJobs.push(job);
+      localStorage.setItem('approvedJobs', JSON.stringify(approvedJobs));
+
+      // Remove from UI
+      const jobElement = document.getElementById(`pending-${jobId}`);
+      if (jobElement) {
+        jobElement.remove();
+      }
+
+      // Show message if no more pending jobs
+      if (pendingJobs.length === 0) {
+        document.getElementById('no-pending-jobs').style.display = 'block';
+      }
+
+      alert('Job listing approved successfully!');
+    }
+  }
+
+  // Deny a job
+  function denyJob(jobId) {
+    // Get pending jobs
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const jobIndex = pendingJobs.findIndex(job => job.id === jobId);
+
+    if (jobIndex !== -1) {
+      const job = pendingJobs[jobIndex];
+
+      // Remove from pending jobs
+      pendingJobs.splice(jobIndex, 1);
+      localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+
+      // Add to denied jobs (optional - for record keeping)
+      const deniedJobs = JSON.parse(localStorage.getItem('deniedJobs')) || [];
+      job.status = 'denied';
+      job.dateDenied = new Date().toISOString();
+      deniedJobs.push(job);
+      localStorage.setItem('deniedJobs', JSON.stringify(deniedJobs));
+
+      // Remove from UI
+      const jobElement = document.getElementById(`pending-${jobId}`);
+      if (jobElement) {
+        jobElement.remove();
+      }
+
+      // Show message if no more pending jobs
+      if (pendingJobs.length === 0) {
+        document.getElementById('no-pending-jobs').style.display = 'block';
+      }
+
+      alert('Job listing denied successfully.');
+    }
+  }
+
+  // Show approved listings
+  function showApprovedListings() {
+    document.getElementById('pending-listings-section').style.display = 'none';
+    document.getElementById('approved-listings-section').style.display = 'block';
+
+    // Update section title
+    document.querySelector('.section-title').textContent = "Approved Job Listings";
+
+    // Update active tab
+    document.getElementById('pending-tab').classList.remove('active');
+    document.getElementById('approved-tab').classList.add('active');
+
+    // Load approved jobs
+    loadApprovedJobs();
+  }
+
+  // Load approved jobs
+  function loadApprovedJobs() {
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    if (approvedJobs.length > 0) {
+      document.getElementById('no-approved-jobs').style.display = 'none';
+      let approvedJobsHTML = '';
+
+      approvedJobs.forEach(job => {
+        const approvedDate = new Date(job.dateApproved).toLocaleDateString();
+
+        approvedJobsHTML += `
+                        <div class="job-card">
+                            <div class="job-info">
+                                <h3>${job.title}</h3>
+                                <div class="job-meta">
+                                    <p><strong>Company:</strong> ${job.company}</p>
+                                    <p><strong>Type:</strong> ${job.type}</p>
+                                    <p><strong>Salary:</strong> ${job.salary}</p>
+                                    <p><strong>Approved:</strong> ${approvedDate}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+      });
+
+      document.getElementById('approved-jobs-list').innerHTML = approvedJobsHTML;
+    } else {
+      document.getElementById('no-approved-jobs').style.display = 'block';
+      document.getElementById('approved-jobs-list').innerHTML = '';
+    }
+  }
+
+  // Logout function
+  function logout(e) {
+    if (e) e.preventDefault();
+    sessionStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+
+</html>

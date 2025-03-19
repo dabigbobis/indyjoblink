@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employer Home - Independence High School Career Center</title>
+  <!-- Include the authentication redirect script first -->
+  <script src="auth-redirect.js"></script>
+  <link rel="stylesheet" href="home-styles.css">
+</head>
+
+<body>
+<!-- Header -->
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <h1>Indy JobLink</h1>
+      </div>
+      <ul>
+        <li><a href="#" id="home-link" class="active">Home</a></li>
+        <li><a href="#post-listings" onclick="showPage('post-listings')">Post Listings</a></li>
+        <li><a href="#responses" onclick="showPage('responses')">Responses</a></li>
+        <!-- Dynamic logout link will be added by JavaScript -->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Home Page -->
+<div id="home" class="page active">
+  <section class="hero">
+    <div class="container">
+      <h2>Connect with Independence High's Talent</h2>
+      <p>Our Career Center connects local businesses with Independence High's talented students.
+        Post job opportunities and find the perfect candidates for your positions.</p>
+      <div class="hero-buttons" id="hero-buttons">
+        <a href="#post-listings" class="btn btn-accent" onclick="showPage('post-listings')">Post a Job</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+      <div class="card">
+        <h3>Your Job Listings</h3>
+        <p>Manage your job listings and view application responses.</p>
+        <div class="job-management-buttons">
+          <a href="#post-listings" class="btn btn-primary" onclick="showPage('post-listings')">Post New Job</a>
+          <a href="#responses" class="btn" onclick="showPage('responses')">View Applications</a>
+        </div>
+      </div>
+
+      <h2 class="section-title">How It Works</h2>
+      <div class="card">
+        <h3>Posting Jobs:</h3>
+        <p>Create detailed job listings for Independence High students. Fill out our simple job submission
+          form with details about the position, requirements, and compensation. Once reviewed and approved by
+          our guidance department, your listing will be visible to all eligible students.</p>
+      </div>
+      <div class="card">
+        <h3>Managing Applications:</h3>
+        <p>When students apply to your listings, you'll receive their information in your "Responses" tab.
+          Review applicants and contact promising candidates directly to arrange interviews or
+          provide additional information about the position.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Post Listings Page -->
+<div id="post-listings" class="page" style="display: none;">
+  <div class="container">
+    <h2 class="section-title">Post a New Job Listing</h2>
+    <div class="card">
+      <form id="post-listing-form">
+        <div class="form-group">
+          <label for="jobTitle">Job Title</label>
+          <input type="text" id="jobTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="jobType">Job Type</label>
+          <select id="jobType" required>
+            <option value="">Select Job Type</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Internship">Internship</option>
+            <option value="Temporary">Temporary</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="jobSalary">Expected Salary</label>
+          <input type="text" id="jobSalary" required placeholder="e.g. $15/hour, $500/week">
+        </div>
+        <div class="form-group">
+          <label for="jobLocation">Location</label>
+          <input type="text" id="jobLocation" required placeholder="e.g. On-site, Remote, Hybrid">
+        </div>
+        <div class="form-group">
+          <label for="jobDescription">Job Description</label>
+          <textarea id="jobDescription" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="jobRequirements">Requirements</label>
+          <textarea id="jobRequirements" rows="3" placeholder="List any skills, qualifications, or experience needed"></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit for Approval</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="submission-confirmation" class="card" style="display: none;">
+      <h3>Job Listing Submitted!</h3>
+      <p>Your job listing has been submitted for review by our administrators.</p>
+      <p>Once approved, it will be visible to students.</p>
+      <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
+      <div class="form-group">
+        <button class="btn" onclick="document.getElementById('submission-confirmation').style.display='none'; document.getElementById('post-listing-form').style.display='block'; document.getElementById('post-listing-form').reset();">Post Another Listing</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Responses Page for Employers -->
+<div id="responses" class="page" style="display: none;">
+  <div class="container">
+    <h2 class="section-title">Student Applications</h2>
+    <div class="card">
+      <div id="responses-content">
+        <!-- Will be populated by JavaScript -->
+        <div class="no-responses" id="no-responses">
+          <p>You don't have any student applications yet.</p>
+          <p>Applications will appear here when students apply to your job listings.</p>
+        </div>
+
+        <div id="student-applications-list">
+          <!-- This will be populated with applicants by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div>
+        <p>&copy; 2025 Independence High School Career Center</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact Guidance Department</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Check if user is logged in as employer
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    // If not an employer, redirect to appropriate page
+    if (currentUser.type !== 'employer') {
+      if (currentUser.type === 'student') {
+        window.location.href = 'student-home.html';
+      } else if (currentUser.type === 'admin') {
+        window.location.href = 'admin-pending.html';
+      }
+      return;
+    }
+
+    // Setup navigation
+    setupNavigation(currentUser);
+
+    // Set up job submission form handler
+    const postListingForm = document.getElementById('post-listing-form');
+    if (postListingForm) {
+      postListingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const jobData = {
+          id: 'job_' + Date.now(),
+          title: document.getElementById('jobTitle').value,
+          type: document.getElementById('jobType').value,
+          salary: document.getElementById('jobSalary').value,
+          location: document.getElementById('jobLocation').value,
+          description: document.getElementById('jobDescription').value,
+          requirements: document.getElementById('jobRequirements').value,
+          company: currentUser.companyName,
+          employerId: currentUser.email,
+          status: 'pending',
+          dateSubmitted: new Date().toISOString()
+        };
+
+        // Store in localStorage, ensuring no duplicates by ID
+        const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+
+        // Check if job with same ID already exists (shouldn't happen with timestamp ID, but just in case)
+        if (!pendingJobs.some(job => job.id === jobData.id)) {
+          pendingJobs.push(jobData);
+          localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+        }
+
+        // Show confirmation message
+        document.getElementById('referenceId').textContent = jobData.id;
+        document.getElementById('post-listing-form').style.display = 'none';
+        document.getElementById('submission-confirmation').style.display = 'block';
+      });
+    }
+
+    // Setup home link navigation
+    const homeLink = document.getElementById('home-link');
+    if (homeLink) {
+      homeLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPage('home');
+      });
+    }
+
+    // Load student applications
+    loadEmployerApplications(currentUser);
+  });
+
+  // Setup navigation
+  function setupNavigation(currentUser) {
+    const navContainer = document.querySelector('nav ul');
+    if (!navContainer) return;
+
+    // Check if the logout link already exists
+    const existingLogoutLink = document.getElementById('logout-link');
+
+    if (currentUser && !existingLogoutLink) {
+      // Create the welcome text element
+      const welcomeItem = document.createElement('li');
+      welcomeItem.className = 'welcome-text';
+      welcomeItem.textContent = `Welcome, ${currentUser.companyName || 'Employer'}`;
+
+      // Create logout link
+      const logoutItem = document.createElement('li');
+      const logoutLink = document.createElement('a');
+      logoutLink.href = '#';
+      logoutLink.textContent = 'Logout';
+      logoutLink.id = 'logout-link';
+      logoutLink.addEventListener('click', logout);
+      logoutItem.appendChild(logoutLink);
+
+      // Add to navigation
+      navContainer.appendChild(welcomeItem);
+      navContainer.appendChild(logoutItem);
+    }
+  }
+
+  // Load applications for employers - UPDATED to always get fresh data from localStorage
+  function loadEmployerApplications(employer) {
+    // Always get fresh data from localStorage
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+    const employerApplications = applications.filter(app => app.employerId === employer.email);
+
+    if (employerApplications.length > 0) {
+      document.getElementById('no-responses').style.display = 'none';
+      const applicationsListContainer = document.getElementById('student-applications-list');
+
+      let applicationsHTML = '';
+      employerApplications.forEach(app => {
+        const applicationDate = new Date(app.dateApplied).toLocaleDateString();
+
+        applicationsHTML += `
+          <div class="application-item card">
+            <h3>${app.jobTitle}</h3>
+            <div class="application-details">
+              <p><strong>Student Name:</strong> ${app.studentName}</p>
+              <p><strong>Student ID:</strong> ${app.studentId}</p>
+              <p><strong>Email:</strong> ${app.studentEmail}</p>
+              <p><strong>Grade:</strong> ${app.studentGrade}</p>
+              <p><strong>Applied:</strong> ${applicationDate}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      applicationsListContainer.innerHTML = applicationsHTML;
+    } else {
+      document.getElementById('no-responses').style.display = 'block';
+      document.getElementById('student-applications-list').innerHTML = '';
+    }
+  }
+
+  // Page navigation function - UPDATED to reload applications when viewing responses
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => {
+      page.style.display = 'none';
+    });
+    document.getElementById(pageId).style.display = 'block';
+
+    // Update active tab in navigation
+    document.querySelectorAll('nav ul li a').forEach(link => {
+      link.classList.remove('active');
+    });
+
+    if (pageId === 'home') {
+      document.querySelector('nav ul li a[href="#"]').classList.add('active');
+    } else {
+      document.querySelector(`nav ul li a[href="#${pageId}"]`)?.classList.add('active');
+    }
+
+    // If switching to responses tab, reload the applications data
+    if (pageId === 'responses') {
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+      if (currentUser && currentUser.type === 'employer') {
+        loadEmployerApplications(currentUser);
+      }
+    }
+  }
+
+  // Logout function
+  function logout(e) {
+    if (e) e.preventDefault();
+    sessionStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+
+</html>

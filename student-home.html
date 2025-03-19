@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Home - Independence High School Career Center</title>
+  <!-- Include the authentication redirect script first -->
+  <script src="auth-redirect.js"></script>
+  <link rel="stylesheet" href="home-styles.css">
+</head>
+
+<body>
+<!-- Header -->
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <h1>Indy JobLink</h1>
+      </div>
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="job-listings.html">Job Listings</a></li>
+        <!-- Dynamic logout link will be added by JavaScript -->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Home Page -->
+<div id="home" class="page active">
+  <section class="hero">
+    <div class="container">
+      <h2>Find Your Perfect Job Opportunity</h2>
+      <p>Our Career Center connects Independence High students with local employers looking for talented
+        individuals. Browse job listings, submit applications, and start your career journey today.</p>
+      <div class="hero-buttons" id="hero-buttons">
+        <a href="job-listings.html" class="btn btn-accent">View Job Listings</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+      <!-- My Applications Section -->
+      <div class="card" id="my-applications">
+        <h3>My Applications</h3>
+        <div id="applications-content">
+          <p>You haven't submitted any job applications yet.</p>
+          <p>Browse the listings to find opportunities that match your skills.</p>
+          <p><a href="job-listings.html" class="btn btn-primary">View All Job Listings</a></p>
+        </div>
+      </div>
+
+      <h2 class="section-title">How It Works</h2>
+      <div class="card">
+        <h3>For Students:</h3>
+        <p>Browse through job listings posted by local employers looking for Independence High talent. When you
+          find a position that interests you, simply click "Apply" and submit your information to get started on
+          your career journey.</p>
+      </div>
+
+      <div class="card">
+        <h3>By Counselors:</h3>
+        <ul style="list-style: none; padding-left: 0;">
+          <p>
+            Created by Independence High School to help students connect with employers and gain valuable work experience.
+          </p>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div>
+        <p>&copy; 2025 Independence High School Career Center</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact Guidance Department</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Check if user is logged in as a student
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    // If not logged in or not a student, redirect
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    if (currentUser.type !== 'student') {
+      // Redirect to appropriate homepage based on user type
+      if (currentUser.type === 'employer') {
+        window.location.href = 'employer-home.html';
+      } else if (currentUser.type === 'admin') {
+        window.location.href = 'admin-pending.html';
+      }
+      return;
+    }
+
+    // Add welcome and logout to navigation
+    setupNavigation(currentUser);
+
+    // Load student applications
+    loadStudentApplications(currentUser);
+  });
+
+  // Setup navigation
+  function setupNavigation(currentUser) {
+    const navContainer = document.querySelector('nav ul');
+    if (!navContainer) return;
+
+    // Create the welcome text element
+    const welcomeItem = document.createElement('li');
+    welcomeItem.className = 'welcome-text';
+    welcomeItem.textContent = `Welcome, ${currentUser.name || 'Student'}`;
+
+    // Create logout link
+    const logoutItem = document.createElement('li');
+    const logoutLink = document.createElement('a');
+    logoutLink.href = '#';
+    logoutLink.textContent = 'Logout';
+    logoutLink.id = 'logout-link';
+    logoutLink.addEventListener('click', logout);
+    logoutItem.appendChild(logoutLink);
+
+    // Add to navigation
+    navContainer.appendChild(welcomeItem);
+    navContainer.appendChild(logoutItem);
+  }
+
+  // Load student applications
+  function loadStudentApplications(student) {
+    // If student has applications, display them
+    if (student.applications && student.applications.length > 0) {
+      const applicationsDiv = document.getElementById('applications-content');
+      let applicationsHTML = '<div class="applications-list">';
+
+      // Loop through applications and create HTML
+      student.applications.forEach(app => {
+        const appDate = new Date(app.dateApplied).toLocaleDateString();
+        applicationsHTML += `
+                    <div class="application-item">
+                        <h4>${app.jobTitle}</h4>
+                        <div class="application-meta">
+                            <p><strong>Company:</strong> ${app.company}</p>
+                            <p><strong>Status:</strong> <span class="status-${app.status?.toLowerCase() || 'pending'}">${app.status || 'Pending'}</span></p>
+                            <p><strong>Applied:</strong> ${appDate}</p>
+                        </div>
+                    </div>
+                `;
+      });
+
+      applicationsHTML += '</div>';
+      applicationsDiv.innerHTML = applicationsHTML;
+    }
+  }
+
+  // Logout function
+  function logout(e) {
+    if (e) e.preventDefault();
+    sessionStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+
+</html>
