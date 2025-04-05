@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Jobs - Independence High School Career Center</title>
+  <!-- Include the authentication redirect script first -->
+  <script src="auth-redirect.js"></script>
+  <link rel="stylesheet" href="student-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Enhanced tab navigation styles */
+    .listings-tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      background-color: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+    }
+
+    .listings-tab {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #666;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .listings-tab.active {
+      color: var(--primary);
+      background-color: rgba(46, 125, 50, 0.05);
+    }
+
+    .listings-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary);
+    }
+
+    .listings-tab:hover:not(.active) {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    /* Improved section cards */
+    .listings-section {
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      background-color: white;
+      transition: var(--transition);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .listings-section:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-header {
+      padding: 1.2rem 1.8rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header h3 {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin: 0;
+      padding: 0;
+      border-bottom: none;
+    }
+
+    .section-header .counter {
+      background-color: var(--accent);
+      color: var(--dark);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .section-content {
+      padding: 1.5rem;
+    }
+
+    /* Enhanced application cards */
+    .application-item {
+      background-color: white;
+      border: 1px solid #eee;
+      border-radius: var(--card-radius);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .application-item:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transform: translateY(-3px);
+    }
+
+    .application-header {
+      padding: 1.2rem 1.5rem;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .application-title {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .application-date {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    .application-content {
+      padding: 1.2rem 1.5rem;
+    }
+
+    .application-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .detail-item i {
+      color: var(--primary);
+      width: 20px;
+      text-align: center;
+    }
+
+    .application-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Empty state styles */
+    .empty-state {
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: #777;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .empty-state p {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .empty-state .btn {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">
+      <a href="student-home.html"><img src="New Logo.png" alt="Indy JobLink Logo"></a>
+    </div>
+    <div class="dropdown">
+      <button class="menu-toggle" onclick="toggleDropdown()">
+        <img src="menu.png" alt="Menu">
+      </button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="student-home.html">Home</a>
+        <a href="student-myjobs.html" class="active">My Jobs</a>
+        <a href="student-profile.html">Profile</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h2 class="section-title">My Job Applications</h2>
+
+    <!-- Enhanced Tab Navigation -->
+    <div class="listings-tabs">
+      <button class="listings-tab active" onclick="showListingsTab('active-applications')">
+        <i class="fas fa-file-alt"></i> Active Applications
+      </button>
+      <button class="listings-tab" onclick="showListingsTab('application-history')">
+        <i class="fas fa-history"></i> Application History
+      </button>
+      <button class="listings-tab" onclick="showListingsTab('saved-jobs')">
+        <i class="fas fa-bookmark"></i> Saved Jobs
+      </button>
+    </div>
+
+    <!-- Active Applications Section -->
+    <div id="active-applications" class="listings-section active">
+      <div class="section-header">
+        <h3>Active Applications</h3>
+        <span class="counter" id="active-counter">0</span>
+      </div>
+      <div class="section-content" id="current-applications-content">
+        <!-- Empty state will be shown by default -->
+        <div class="empty-state" id="no-current-applications">
+          <i class="fas fa-inbox"></i>
+          <p>You don't have any active applications at the moment.</p>
+          <a href="student-home.html" class="btn btn-primary">Browse Jobs</a>
+        </div>
+        <div id="current-applications-list"></div>
+      </div>
+    </div>
+
+    <!-- Application History Section -->
+    <div id="application-history" class="listings-section" style="display: none;">
+      <div class="section-header">
+        <h3>Application History</h3>
+        <span class="counter" id="history-counter">0</span>
+      </div>
+      <div class="section-content" id="application-history-content">
+        <div class="empty-state" id="no-application-history">
+          <i class="fas fa-history"></i>
+          <p>Your application history will appear here.</p>
+        </div>
+        <div id="application-history-list"></div>
+      </div>
+    </div>
+
+    <!-- Saved Jobs Section -->
+    <div id="saved-jobs" class="listings-section" style="display: none;">
+      <div class="section-header">
+        <h3>Saved Jobs</h3>
+        <span class="counter" id="saved-counter">0</span>
+      </div>
+      <div class="section-content" id="saved-jobs-content">
+        <div class="empty-state" id="no-saved-jobs">
+          <i class="fas fa-bookmark"></i>
+          <p>You haven't saved any jobs yet.</p>
+          <p>Save jobs you're interested in to apply later.</p>
+        </div>
+        <div id="saved-jobs-list"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div>
+        <p>&copy; 2025 Independence High School Career Center</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Dropdown menu functions
+  function toggleDropdown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle') && !event.target.matches('.menu-toggle img')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+
+  // Show tab content
+  function showListingsTab(tabId) {
+    // Update tab buttons
+    document.querySelectorAll('.listings-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+
+    // Find the tab button
+    const activeTabButton = document.querySelector(`.listings-tab[onclick="showListingsTab('${tabId}')"]`);
+    if (activeTabButton) {
+      activeTabButton.classList.add('active');
+    }
+
+    // Hide all sections
+    document.querySelectorAll('.listings-section').forEach(section => {
+      section.style.display = 'none';
+    });
+
+    // Show active section
+    const activeSection = document.getElementById(tabId);
+    if (activeSection) {
+      activeSection.style.display = 'block';
+    }
+  }
+
+  // Check if user is logged in as a student
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    // If not logged in or not a student, redirect
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    if (currentUser.type !== 'student') {
+      // Redirect to appropriate homepage based on user type
+      if (currentUser.type === 'employer') {
+        window.location.href = 'employer-home.html';
+      } else if (currentUser.type === 'admin') {
+        window.location.href = 'admin-pending.html';
+      }
+      return;
+    }
+
+    // Load student applications
+    loadApplications(currentUser);
+
+    // Load saved jobs if any
+    loadSavedJobs(currentUser);
+  });
+
+  // Load applications
+  function loadApplications(user) {
+    // Update counters to 0 by default
+    document.getElementById('active-counter').textContent = '0';
+    document.getElementById('history-counter').textContent = '0';
+
+    if (!user.applications || user.applications.length === 0) {
+      // No applications, show empty states
+      document.getElementById('no-current-applications').style.display = 'block';
+      document.getElementById('no-application-history').style.display = 'block';
+      return;
+    }
+
+    // Split applications by status
+    const pendingApplications = user.applications.filter(app =>
+            app.status === 'Pending' || !app.status || app.status === 'pending'
+    );
+
+    const completedApplications = user.applications.filter(app =>
+            app.status !== 'Pending' && app.status !== 'pending' && app.status
+    );
+
+    // Update counters
+    document.getElementById('active-counter').textContent = pendingApplications.length;
+    document.getElementById('history-counter').textContent = completedApplications.length;
+
+    // Display pending/active applications
+    if (pendingApplications.length > 0) {
+      document.getElementById('no-current-applications').style.display = 'none';
+
+      let applicationsHTML = '';
+      pendingApplications.forEach(app => {
+        const appDate = new Date(app.dateApplied).toLocaleDateString();
+
+        applicationsHTML += `
+          <div class="application-item">
+            <div class="application-header">
+              <h4 class="application-title">${app.jobTitle}</h4>
+              <span class="application-date">Applied: ${appDate}</span>
+            </div>
+            <div class="application-content">
+              <div class="application-details">
+                <div class="detail-item">
+                  <i class="fas fa-building"></i>
+                  <span>${app.company}</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span class="status-pending">Pending</span>
+                </div>
+              </div>
+              <div class="application-actions">
+                <button class="btn" onclick="withdrawApplication('${app.id}')">
+                  <i class="fas fa-times-circle"></i> Withdraw Application
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('current-applications-list').innerHTML = applicationsHTML;
+    }
+
+    // Display completed applications history
+    if (completedApplications.length > 0) {
+      document.getElementById('no-application-history').style.display = 'none';
+
+      let historyHTML = '';
+      completedApplications.forEach(app => {
+        const appDate = new Date(app.dateApplied).toLocaleDateString();
+        const statusClass = app.status.toLowerCase() === 'approved' ? 'status-approved' : 'status-rejected';
+
+        historyHTML += `
+          <div class="application-item">
+            <div class="application-header">
+              <h4 class="application-title">${app.jobTitle}</h4>
+              <span class="application-date">Applied: ${appDate}</span>
+            </div>
+            <div class="application-content">
+              <div class="application-details">
+                <div class="detail-item">
+                  <i class="fas fa-building"></i>
+                  <span>${app.company}</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span class="${statusClass}">${app.status}</span>
+                </div>
+                ${app.responseDate ? `
+                <div class="detail-item">
+                  <i class="fas fa-calendar-check"></i>
+                  <span>Response: ${new Date(app.responseDate).toLocaleDateString()}</span>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('application-history-list').innerHTML = historyHTML;
+    }
+  }
+
+  // Load saved jobs
+  function loadSavedJobs(user) {
+    // Update saved counter
+    const savedCount = user.savedJobs ? user.savedJobs.length : 0;
+    document.getElementById('saved-counter').textContent = savedCount;
+
+    if (!user.savedJobs || user.savedJobs.length === 0) {
+      document.getElementById('no-saved-jobs').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('no-saved-jobs').style.display = 'none';
+
+    // Get all approved jobs
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    // Filter for jobs that are in the saved list
+    const savedJobDetails = approvedJobs.filter(job =>
+            user.savedJobs.includes(job.id)
+    );
+
+    if (savedJobDetails.length > 0) {
+      let savedJobsHTML = '';
+
+      savedJobDetails.forEach(job => {
+        savedJobsHTML += `
+          <div class="application-item">
+            <div class="application-header">
+              <h4 class="application-title">${job.title}</h4>
+              <span class="application-date">${job.company}</span>
+            </div>
+            <div class="application-content">
+              <div class="application-details">
+                <div class="detail-item">
+                  <i class="fas fa-briefcase"></i>
+                  <span>${job.type || 'Not specified'}</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-dollar-sign"></i>
+                  <span>${job.salary || 'Not specified'}</span>
+                </div>
+                ${job.location ? `
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>${job.location}</span>
+                </div>
+                ` : ''}
+              </div>
+              <div class="application-actions">
+                <a href="student-home.html" class="btn btn-primary">
+                  <i class="fas fa-external-link-alt"></i> View Details
+                </a>
+                <button class="btn" onclick="removeFromSaved('${job.id}')">
+                  <i class="fas fa-bookmark"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('saved-jobs-list').innerHTML = savedJobsHTML;
+    }
+  }
+
+  // Withdraw application
+  function withdrawApplication(applicationId) {
+    if (confirm('Are you sure you want to withdraw this application?')) {
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+      if (!currentUser || !currentUser.applications) return;
+
+      // Remove from user's applications array
+      currentUser.applications = currentUser.applications.filter(app => app.id !== applicationId);
+
+      // Update session storage
+      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      // Update localStorage users
+      const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+      const studentIndex = users.students.findIndex(s => s.studentId === currentUser.studentId);
+
+      if (studentIndex !== -1) {
+        users.students[studentIndex].applications = currentUser.applications;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+
+      // Remove from global applications store
+      const applications = JSON.parse(localStorage.getItem('applications')) || [];
+      const updatedApplications = applications.filter(app => app.id !== applicationId);
+      localStorage.setItem('applications', JSON.stringify(updatedApplications));
+
+      // Reload applications on page
+      loadApplications(currentUser);
+
+      alert('Application withdrawn successfully.');
+    }
+  }
+
+  // Remove job from saved
+  function removeFromSaved(jobId) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    if (!currentUser || !currentUser.savedJobs) return;
+
+    // Remove from user's saved jobs array
+    currentUser.savedJobs = currentUser.savedJobs.filter(id => id !== jobId);
+
+    // Update session storage
+    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+    // Update localStorage users
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const studentIndex = users.students.findIndex(s => s.studentId === currentUser.studentId);
+
+    if (studentIndex !== -1) {
+      users.students[studentIndex].savedJobs = currentUser.savedJobs;
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    // Reload saved jobs on page
+    loadSavedJobs(currentUser);
+
+    alert('Job removed from saved jobs.');
+  }
+
+  // Logout function
+  function logout(e) {
+    if (e) e.preventDefault();
+    sessionStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+
+</html>

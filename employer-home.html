@@ -7,138 +7,1075 @@
   <title>Employer Home - Independence High School Career Center</title>
   <!-- Include the authentication redirect script first -->
   <script src="auth-redirect.js"></script>
-  <link rel="stylesheet" href="home-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Student theme - Green and white */
+    :root {
+      --primary: #2e7d32;    /* Dark green */
+      --secondary: #4caf50;  /* Medium green */
+      --accent: #81c784;     /* Light green */
+      --light: #f5f5f5;      /* Off-white */
+      --dark: #1b5e20;       /* Very dark green */
+      --hover-green: #388e3c; /* Hover dark green */
+      --hover-light: #c8e6c9; /* Hover light green */
+      --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --card-radius: 8px;
+      --transition: all 0.3s ease;
+    }
+
+    /* All other necessary styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header styles with logo */
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      position: relative;
+      top: 4px; /* Shift the logo down by 5px */
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    /* Dropdown menu styles */
+    .menu-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle img {
+      width: 35px;
+      height: 35px;
+    }
+
+    /* Dropdown styles */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 45px;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1000;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+    }
+
+    .dropdown-content a {
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      color: var(--dark);
+      display: block;
+      transition: 0.3s;
+      border-bottom: 1px solid #eee;
+    }
+
+    .dropdown-content a:hover {
+      background-color: var(--hover-light);
+    }
+
+    .dropdown-content a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .show {
+      display: block;
+    }
+
+    main {
+      padding: 2rem 0 4rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--dark);
+      font-size: 1.8rem;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 0.75rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: var(--accent);
+      border-radius: 2px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.8rem;
+      margin-bottom: 1.8rem;
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding-bottom: 0.7rem;
+    }
+
+    /* Form styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      box-shadow: var(--box-shadow);
+      letter-spacing: 0.3px;
+    }
+
+    .btn:hover {
+      background-color: var(--hover-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: var(--dark);
+    }
+
+    .btn-accent:hover {
+      background-color: var(--hover-light);
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #bd2130;
+    }
+
+    /* Application items */
+    .application-item {
+      padding: 1.2rem;
+      border: 1px solid #eee;
+      border-radius: var(--card-radius);
+      margin-bottom: 1.2rem;
+      background-color: #f9f9f9;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .application-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .application-item h3 {
+      margin-bottom: 0.8rem;
+      color: var(--primary);
+      font-size: 1.2rem;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .application-details {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .application-details p {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Action buttons container */
+    .job-management-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: var(--primary);
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.8rem;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      transition: var(--transition);
+      opacity: 0.8;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* Profile page specific styles - UPDATED FOR LARGER PROFILE */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;  /* Increased gap */
+      margin-bottom: 2.5rem;  /* Increased margin */
+      flex-wrap: wrap;
+      padding: 1rem 0;  /* Added padding */
+    }
+
+    .profile-photo {
+      width: 180px;  /* Increased size */
+      height: 180px;  /* Increased size */
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Added shadow */
+    }
+
+    .profile-photo i {
+      font-size: 3.5rem;  /* Increased size */
+    }
+
+    .profile-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-photo.placeholder {
+      color: #999;
+      font-size: 3rem;  /* Increased size */
+      background-color: #f0f0f0;
+      border: 2px dashed #ddd;
+      cursor: pointer;
+    }
+
+    .profile-photo .edit-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 8px;  /* Increased padding */
+      text-align: center;
+      color: white;
+      font-size: 0.9rem;  /* Increased size */
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .profile-photo:hover .edit-overlay {
+      opacity: 1;
+    }
+
+    .profile-details {
+      flex: 1;
+    }
+
+    .profile-details h2 {
+      color: var(--primary);
+      margin-bottom: 0.8rem;  /* Increased margin */
+      font-size: 2rem;  /* Increased size */
+    }
+
+    .profile-details p {
+      color: #666;
+      margin-bottom: 0.5rem;  /* Increased margin */
+      font-size: 1.1rem;  /* Increased size */
+      line-height: 1.8;  /* Increased line height */
+    }
+
+    .profile-details p span {
+      font-weight: 500;
+      color: #444;
+    }
+
+    .profile-actions {
+      margin-top: 1.5rem;  /* Increased margin */
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .profile-actions .btn {
+      padding: 0.7rem 1.8rem;  /* Larger button */
+      font-size: 1.05rem;  /* Larger button text */
+    }
+
+    .profile-form .form-group {
+      margin-bottom: 1.8rem;  /* Increased spacing */
+    }
+
+    .profile-form label {
+      font-size: 1.1rem;  /* Larger label text */
+      margin-bottom: 0.7rem;  /* Increased spacing */
+    }
+
+    .profile-form input,
+    .profile-form textarea,
+    .profile-form select {
+      padding: 0.9rem;  /* Larger input fields */
+      font-size: 1.05rem;  /* Larger input text */
+    }
+
+    /* Status indicators */
+    .status-pending {
+      background-color: #f39c12;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    .status-approved {
+      background-color: #27ae60;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      border-radius: var(--card-radius);
+      width: 80%;
+      max-width: 700px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: modalFadeIn 0.3s;
+    }
+
+    @keyframes modalFadeIn {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .modal-header {
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      color: var(--dark);
+    }
+
+    .close-modal {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-modal:hover,
+    .close-modal:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-footer {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #e9ecef;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Tag system styles */
+    .tags-container {
+      margin-top: 10px;
+    }
+
+    .selected-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+      min-height: 40px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--accent);
+      color: var(--dark);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .tag .remove-tag {
+      margin-left: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--dark);
+      opacity: 0.7;
+    }
+
+    .tag .remove-tag:hover {
+      opacity: 1;
+    }
+
+    .tags-search {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .tags-modal {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+
+    .tags-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .tags-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tags-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tag-option {
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .tag-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .tag-option input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .tag-option label {
+      margin: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .tags-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Student application detail styles for responses page */
+    .student-application-detail {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 20px;
+      border-radius: var(--card-radius);
+      background-color: white;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 20px;
+    }
+
+    .student-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .student-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .student-photo i {
+      font-size: 3rem;
+      color: #999;
+    }
+
+    .student-info {
+      flex: 1;
+    }
+
+    .student-info h4 {
+      margin-top: 0;
+      color: var(--dark);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .student-detail {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .student-detail i {
+      color: var(--primary);
+      width: 20px;
+      text-align: center;
+    }
+
+    .student-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .application-decision-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-approve-application {
+      background-color: #27ae60;
+    }
+
+    .btn-approve-application:hover {
+      background-color: #219653;
+    }
+
+    .btn-deny-application {
+      background-color: #e74c3c;
+    }
+
+    .btn-deny-application:hover {
+      background-color: #c0392b;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .job-management-buttons {
+        flex-direction: column;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .profile-details {
+        width: 100%;
+      }
+
+      .profile-actions {
+        justify-content: center;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 15px;
+      }
+
+      .modal-footer {
+        flex-direction: column;
+      }
+
+      .modal-footer .btn {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      .student-application-detail {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .student-actions,
+      .application-decision-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 <!-- Header -->
 <header>
-  <div class="container">
-    <nav>
-      <div class="logo">
-        <h1>Indy JobLink</h1>
+  <div class="container header-container">
+    <div class="logo">
+      <a href="employer-home.html"><img src="New Logo.png" alt="Indy JobLink Logo"></a>
+    </div>
+    <div class="dropdown">
+      <button class="menu-toggle" onclick="toggleDropdown()">
+        <img src="menu.png" alt="Menu">
+      </button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="javascript:void(0);" onclick="showPage('home')" id="home-link" class="active">Home</a>
+        <a href="javascript:void(0);" onclick="showPage('post-listings')">Manage Listings</a>
+        <a href="javascript:void(0);" onclick="showPage('responses')">Responses</a>
+        <a href="javascript:void(0);" onclick="showPage('profile')">Profile</a>
+        <a href="javascript:void(0);" onclick="logout(event)">Logout</a>
       </div>
-      <ul>
-        <li><a href="#" id="home-link" class="active">Home</a></li>
-        <li><a href="#post-listings" onclick="showPage('post-listings')">Post Listings</a></li>
-        <li><a href="#responses" onclick="showPage('responses')">Responses</a></li>
-        <!-- Dynamic logout link will be added by JavaScript -->
-      </ul>
-    </nav>
+    </div>
   </div>
 </header>
 
 <!-- Home Page -->
 <div id="home" class="page active">
-  <section class="hero">
-    <div class="container">
-      <h2>Connect with Independence High's Talent</h2>
-      <p>Our Career Center connects local businesses with Independence High's talented students.
-        Post job opportunities and find the perfect candidates for your positions.</p>
-      <div class="hero-buttons" id="hero-buttons">
-        <a href="#post-listings" class="btn btn-accent" onclick="showPage('post-listings')">Post a Job</a>
-      </div>
-    </div>
-  </section>
-
   <main>
     <div class="container">
+      <h2 class="section-title">Post a New Job Listing</h2>
       <div class="card">
-        <h3>Your Job Listings</h3>
-        <p>Manage your job listings and view application responses.</p>
-        <div class="job-management-buttons">
-          <a href="#post-listings" class="btn btn-primary" onclick="showPage('post-listings')">Post New Job</a>
-          <a href="#responses" class="btn" onclick="showPage('responses')">View Applications</a>
-        </div>
+        <form id="post-listing-form">
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" required>
+          </div>
+          <div class="form-group">
+            <label for="jobType">Job Type</label>
+            <select id="jobType" required>
+              <option value="">Select Job Type</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Temporary">Temporary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="jobSalary">Expected Salary</label>
+            <input type="text" id="jobSalary" required placeholder="e.g. $15/hour, $500/week">
+          </div>
+          <div class="form-group">
+            <label for="jobLocation">Location</label>
+            <input type="text" id="jobLocation" required placeholder="e.g. New York City, New York">
+          </div>
+          <div class="form-group">
+            <label for="jobDetails">Job Details</label>
+            <textarea id="jobDetails" rows="8" required placeholder="Describe the job, responsibilities, and any requirements needed"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Tags <small>(Select tags that relate to this position)</small></label>
+            <div class="selected-tags" id="selected-tags-display" onclick="openTagSelector()">
+              <!-- Selected tags will appear here -->
+              <span class="empty-tags-message">No tags selected (click to add tags)</span>
+            </div>
+            <input type="hidden" id="jobTags" name="jobTags" value="">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit for Approval</button>
+          </div>
+        </form>
       </div>
 
-      <h2 class="section-title">How It Works</h2>
-      <div class="card">
-        <h3>Posting Jobs:</h3>
-        <p>Create detailed job listings for Independence High students. Fill out our simple job submission
-          form with details about the position, requirements, and compensation. Once reviewed and approved by
-          our guidance department, your listing will be visible to all eligible students.</p>
-      </div>
-      <div class="card">
-        <h3>Managing Applications:</h3>
-        <p>When students apply to your listings, you'll receive their information in your "Responses" tab.
-          Review applicants and contact promising candidates directly to arrange interviews or
-          provide additional information about the position.</p>
+      <div id="submission-confirmation" class="card" style="display: none;">
+        <h3>Job Listing Submitted!</h3>
+        <p>Your job listing has been submitted for review by our administrators.</p>
+        <p>Once approved, it will be visible to students.</p>
+        <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
+        <div class="form-group">
+          <button class="btn" onclick="document.getElementById('submission-confirmation').style.display='none'; document.getElementById('post-listing-form').style.display='block'; document.getElementById('post-listing-form').reset();">Post Another Listing</button>
+        </div>
       </div>
     </div>
   </main>
 </div>
 
-<!-- Post Listings Page -->
+<!-- Post Listings Page (Manage Listings) -->
 <div id="post-listings" class="page" style="display: none;">
   <div class="container">
-    <h2 class="section-title">Post a New Job Listing</h2>
+    <h2 class="section-title">Manage Job Listings</h2>
     <div class="card">
-      <form id="post-listing-form">
-        <div class="form-group">
-          <label for="jobTitle">Job Title</label>
-          <input type="text" id="jobTitle" required>
+      <h3>Your Current Listings</h3>
+      <div id="employer-listings">
+        <!-- Will be populated by JavaScript -->
+        <div class="no-listings" id="no-listings" style="text-align: center; padding: 2rem; color: #666;">
+          <p>You don't have any active job listings yet.</p>
+          <p>Create a new listing to connect with talented students.</p>
         </div>
-        <div class="form-group">
-          <label for="jobType">Job Type</label>
-          <select id="jobType" required>
-            <option value="">Select Job Type</option>
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Internship">Internship</option>
-            <option value="Temporary">Temporary</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="jobSalary">Expected Salary</label>
-          <input type="text" id="jobSalary" required placeholder="e.g. $15/hour, $500/week">
-        </div>
-        <div class="form-group">
-          <label for="jobLocation">Location</label>
-          <input type="text" id="jobLocation" required placeholder="e.g. On-site, Remote, Hybrid">
-        </div>
-        <div class="form-group">
-          <label for="jobDescription">Job Description</label>
-          <textarea id="jobDescription" rows="5" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="jobRequirements">Requirements</label>
-          <textarea id="jobRequirements" rows="3" placeholder="List any skills, qualifications, or experience needed"></textarea>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">Submit for Approval</button>
-        </div>
-      </form>
-    </div>
-
-    <div id="submission-confirmation" class="card" style="display: none;">
-      <h3>Job Listing Submitted!</h3>
-      <p>Your job listing has been submitted for review by our administrators.</p>
-      <p>Once approved, it will be visible to students.</p>
-      <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
-      <div class="form-group">
-        <button class="btn" onclick="document.getElementById('submission-confirmation').style.display='none'; document.getElementById('post-listing-form').style.display='block'; document.getElementById('post-listing-form').reset();">Post Another Listing</button>
+        <div id="listings-list"></div>
+      </div>
+      <div class="job-management-buttons">
+        <button class="btn btn-primary" onclick="showPage('home')">Post New Listing</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Responses Page for Employers -->
+<!-- Responses Page -->
 <div id="responses" class="page" style="display: none;">
   <div class="container">
     <h2 class="section-title">Student Applications</h2>
     <div class="card">
-      <div id="responses-content">
-        <!-- Will be populated by JavaScript -->
-        <div class="no-responses" id="no-responses">
+      <div id="applications-content">
+        <div class="no-applications" id="no-applications" style="text-align: center; padding: 2rem; color: #666;">
           <p>You don't have any student applications yet.</p>
           <p>Applications will appear here when students apply to your job listings.</p>
         </div>
+        <div id="applications-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div id="student-applications-list">
-          <!-- This will be populated with applicants by JavaScript -->
+<!-- Profile Page -->
+<div id="profile" class="page" style="display: none;">
+  <div class="container">
+    <h2 class="section-title">Employer Profile</h2>
+
+    <div class="card">
+      <div class="profile-header">
+        <div id="profile-photo-container" class="profile-photo placeholder">
+          <i class="fas fa-building"></i>
+          <div class="edit-overlay">Edit Photo</div>
+          <input type="file" id="profile-photo-input" style="display: none;" accept="image/*">
+        </div>
+        <div class="profile-details">
+          <h2 id="profile-company-name">Company Name</h2>
+          <p id="profile-email">Email: <span>--</span></p>
+          <p id="profile-phone">Phone: <span>--</span></p>
+          <div class="profile-actions">
+            <button class="btn btn-primary" onclick="showEditProfile()">Edit Profile Info</button>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- Edit Profile Form (initially hidden) -->
+    <div id="edit-profile-form" class="card" style="display: none;">
+      <h3>Edit Profile Information</h3>
+      <form id="profile-form" class="profile-form">
+        <div class="form-group">
+          <label for="edit-company-name">Company Name</label>
+          <input type="text" id="edit-company-name" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-email">Email</label>
+          <input type="email" id="edit-email" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-phone">Phone Number</label>
+          <input type="tel" id="edit-phone" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-company-description">Company Description</label>
+          <textarea id="edit-company-description" rows="6" placeholder="Brief description of your company"></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn" onclick="cancelEditProfile()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Tag Selector Modal -->
+<div id="tagSelectorModal" class="modal">
+  <div class="modal-content" style="max-width: 600px; max-height: 70vh; overflow: auto;">
+    <div class="modal-header">
+      <h3>Select Tags</h3>
+      <span class="close-modal" onclick="closeTagSelector()">&times;</span>
+    </div>
+    <div>
+      <input type="text" id="tagSearch" class="tags-search" placeholder="Search for tags...">
+      <div class="tags-modal">
+        <div class="tags-list" id="tagsListContainer">
+          <!-- Tags will be populated here by JavaScript -->
+        </div>
+      </div>
+      <div class="tags-actions">
+        <button class="btn" onclick="closeTagSelector()">Cancel</button>
+        <button class="btn btn-primary" onclick="addSelectedTags()">Add Selected Tags</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Job Details Modal -->
+<div id="jobDetailsModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Job Details</h3>
+      <span class="close-modal" onclick="closeJobModal()">&times;</span>
+    </div>
+    <form id="edit-job-form">
+      <input type="hidden" id="edit-job-id">
+      <div class="form-group">
+        <label for="edit-job-title">Job Title</label>
+        <input type="text" id="edit-job-title" required>
+      </div>
+      <div class="form-group">
+        <label for="edit-job-type">Job Type</label>
+        <select id="edit-job-type" required>
+          <option value="">Select Job Type</option>
+          <option value="Full-time">Full-time</option>
+          <option value="Part-time">Part-time</option>
+          <option value="Internship">Internship</option>
+          <option value="Temporary">Temporary</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="edit-job-salary">Expected Salary</label>
+        <input type="text" id="edit-job-salary" required>
+      </div>
+      <div class="form-group">
+        <label for="edit-job-location">Location</label>
+        <input type="text" id="edit-job-location" required>
+      </div>
+      <div class="form-group">
+        <label for="edit-job-details">Job Details</label>
+        <textarea id="edit-job-details" rows="8" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Tags</label>
+        <div class="selected-tags" id="edit-selected-tags-display" onclick="openEditTagSelector()">
+          <!-- Selected tags will appear here -->
+        </div>
+        <input type="hidden" id="edit-job-tags" name="edit-job-tags" value="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="deleteJob()">Delete Job</button>
+        <button type="button" class="btn" onclick="closeJobModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Job</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Tag Selector Modal -->
+<div id="editTagSelectorModal" class="modal">
+  <div class="modal-content" style="max-width: 600px; max-height: 70vh; overflow: auto;">
+    <div class="modal-header">
+      <h3>Edit Tags</h3>
+      <span class="close-modal" onclick="closeEditTagSelector()">&times;</span>
+    </div>
+    <div>
+      <input type="text" id="editTagSearch" class="tags-search" placeholder="Search tags...">
+      <div class="tags-modal">
+        <div class="tags-list" id="editTagsListContainer">
+          <!-- Tags will be populated here by JavaScript -->
+        </div>
+      </div>
+      <div class="tags-actions">
+        <button class="btn" onclick="closeEditTagSelector()">Cancel</button>
+        <button class="btn btn-primary" onclick="updateSelectedTags()">Update Tags</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Student Application Detail Modal -->
+<div id="studentApplicationModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Student Application Details</h3>
+      <span class="close-modal" onclick="closeStudentApplicationModal()">&times;</span>
+    </div>
+    <div id="student-application-content">
+      <!-- Student application details will be loaded here -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeStudentApplicationModal()">Close</button>
+      <button class="btn btn-deny-application" id="deny-application-btn">Deny Application</button>
+      <button class="btn btn-approve-application" id="approve-application-btn">Approve Application</button>
     </div>
   </div>
 </div>
@@ -150,16 +1087,185 @@
       <div>
         <p>&copy; 2025 Independence High School Career Center</p>
       </div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Contact Guidance Department</a>
-      </div>
     </div>
   </div>
 </footer>
 
 <script>
+  // All available tags for jobs
+  const allTags = [
+    "401(k)",
+    "Administrative",
+    "After School Hours",
+    "Apprenticeship",
+    "Arts-Related",
+    "Babysitting",
+    "Bilingual",
+    "Bonus Opportunities",
+    "Call Center",
+    "Career Advancement",
+    "Cashier",
+    "Certification Provided",
+    "Commission-Based",
+    "Communication",
+    "Construction",
+    "Contract",
+    "Customer Interaction",
+    "Customer Service",
+    "Customer Support",
+    "CTE Pathway-Aligned",
+    "Coding",
+    "Data Entry",
+    "Day Shift",
+    "Delivery Driver",
+    "During School Hours",
+    "Education",
+    "Employee Discount",
+    "Engineering",
+    "Entertainment",
+    "Entry-Level",
+    "Event Planning",
+    "Evening Shift",
+    "Finance",
+    "Flexible Hours",
+    "Food Service",
+    "For High School Students",
+    "For Juniors Only",
+    "For Seniors Only",
+    "For Underclassmen",
+    "Free Meals",
+    "Free Training",
+    "Freelance",
+    "Full-Time",
+    "Government",
+    "Graphic Design",
+    "Healthcare",
+    "Health Benefits",
+    "Help Desk Support",
+    "Hospitality",
+    "Housing Provided",
+    "Hourly Wage",
+    "Hybrid",
+    "ID Support",
+    "In-Person",
+    "Internship",
+    "Interview at School",
+    "IT Support",
+    "Leadership",
+    "Legal",
+    "Local Business Partnership",
+    "Management",
+    "Manufacturing",
+    "Marketing",
+    "Marketing Coordinator",
+    "Media & Journalism",
+    "Mid-Level",
+    "Microsoft Office",
+    "Night Shift",
+    "No Experience Required",
+    "Non-Profit",
+    "On-Campus",
+    "On-Site",
+    "Open to All Grade Levels",
+    "Paid Internship",
+    "Paid Time Off",
+    "Part-Time",
+    "Personal Assistant",
+    "Photographer/Videographer",
+    "Problem-Solving",
+    "Public Speaking",
+    "Remote",
+    "Research Assistant",
+    "Retail",
+    "Rotational Shift",
+    "STEM Opportunity",
+    "STEM Pathway",
+    "STEM Related",
+    "STEM-Focused",
+    "STEM-Specific",
+    "STEM-Focused Opportunity",
+    "Salary",
+    "Sales & Marketing",
+    "Sales Representative",
+    "Scholarship Available",
+    "School Club Affiliated",
+    "School Credit Available",
+    "Science & Research",
+    "Seasonal",
+    "Security",
+    "Senior-Level",
+    "Social Media",
+    "Social Media Manager",
+    "Student-Led Opportunity",
+    "Summer Break Only",
+    "Teamwork",
+    "Technology",
+    "Temporary",
+    "Time Management",
+    "Tips Included",
+    "Tutor",
+    "Tuition Assistance",
+    "Unpaid Internship",
+    "UX/UI Design",
+    "Vacation Pay",
+    "Volunteer",
+    "Warehouse Associate",
+    "Weekend Job",
+    "Weekend Only",
+    "Work-Study",
+    "Writing & Content Creation",
+    "Writing & Editing"
+  ];
+
+  // Currently selected tags
+  let selectedTags = [];
+  let editingSelectedTags = [];
+
+  // Currently selected application for decisions
+  let currentApplicationId = null;
+
+  // Dropdown menu functions
+  function toggleDropdown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle') && !event.target.matches('.menu-toggle img')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+
+    // Also close the modal if user clicks outside of it
+    const modal = document.getElementById('jobDetailsModal');
+    if (event.target === modal) {
+      closeJobModal();
+    }
+
+    // Close tag selector modal if clicked outside
+    const tagModal = document.getElementById('tagSelectorModal');
+    if (event.target === tagModal) {
+      closeTagSelector();
+    }
+
+    // Close edit tag selector modal if clicked outside
+    const editTagModal = document.getElementById('editTagSelectorModal');
+    if (event.target === editTagModal) {
+      closeEditTagSelector();
+    }
+
+    // Close student application modal if clicked outside
+    const studentModal = document.getElementById('studentApplicationModal');
+    if (event.target === studentModal) {
+      closeStudentApplicationModal();
+    }
+  }
+
   // Check if user is logged in as employer
   document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
@@ -178,8 +1284,14 @@
       return;
     }
 
-    // Setup navigation
-    setupNavigation(currentUser);
+    // Load profile information
+    loadProfileInfo(currentUser);
+
+    // Load employer's listings
+    loadEmployerListings(currentUser);
+
+    // Load student applications
+    loadEmployerApplications(currentUser);
 
     // Set up job submission form handler
     const postListingForm = document.getElementById('post-listing-form');
@@ -194,12 +1306,13 @@
           type: document.getElementById('jobType').value,
           salary: document.getElementById('jobSalary').value,
           location: document.getElementById('jobLocation').value,
-          description: document.getElementById('jobDescription').value,
-          requirements: document.getElementById('jobRequirements').value,
+          details: document.getElementById('jobDetails').value,
           company: currentUser.companyName,
           employerId: currentUser.email,
           status: 'pending',
-          dateSubmitted: new Date().toISOString()
+          dateSubmitted: new Date().toISOString(),
+          tags: selectedTags, // Add selected tags to job data
+          employerPhoto: currentUser.profilePhoto // Add employer photo
         };
 
         // Store in localStorage, ensuring no duplicates by ID
@@ -215,74 +1328,633 @@
         document.getElementById('referenceId').textContent = jobData.id;
         document.getElementById('post-listing-form').style.display = 'none';
         document.getElementById('submission-confirmation').style.display = 'block';
+
+        // Reset selected tags for the next job submission
+        selectedTags = [];
+        updateSelectedTagsDisplay();
       });
     }
 
-    // Setup home link navigation
-    const homeLink = document.getElementById('home-link');
-    if (homeLink) {
-      homeLink.addEventListener('click', function(e) {
+    // Setup edit profile form
+    const profileForm = document.getElementById('profile-form');
+    if (profileForm) {
+      profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        showPage('home');
+        updateProfileInfo();
       });
     }
 
-    // Load student applications
-    loadEmployerApplications(currentUser);
+    // Set up profile photo upload
+    const profilePhotoContainer = document.getElementById('profile-photo-container');
+    const profilePhotoInput = document.getElementById('profile-photo-input');
+
+    if (profilePhotoContainer && profilePhotoInput) {
+      profilePhotoContainer.addEventListener('click', function() {
+        profilePhotoInput.click();
+      });
+
+      profilePhotoInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+
+          // Validate file type
+          if (!file.type.match('image.*')) {
+            alert('Please select an image file.');
+            return;
+          }
+
+          // Read and display the image
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            // Create image element and remove placeholder
+            profilePhotoContainer.innerHTML = `<img src="${e.target.result}" alt="Company Logo"><div class="edit-overlay">Edit Photo</div>`;
+            profilePhotoContainer.classList.remove('placeholder');
+
+            // Save image to localStorage
+            saveProfilePhoto(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Set up job edit form handler
+    const editJobForm = document.getElementById('edit-job-form');
+    if (editJobForm) {
+      editJobForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateJob();
+      });
+    }
+
+    // Set up tag search functionality
+    document.getElementById('tagSearch').addEventListener('input', function() {
+      filterTags(this.value, 'tagsListContainer');
+    });
+
+    document.getElementById('editTagSearch').addEventListener('input', function() {
+      filterTags(this.value, 'editTagsListContainer');
+    });
+
+    // Set up application approval/denial buttons
+    document.getElementById('approve-application-btn').addEventListener('click', function() {
+      if (currentApplicationId) {
+        approveApplication(currentApplicationId);
+      }
+    });
+
+    document.getElementById('deny-application-btn').addEventListener('click', function() {
+      if (currentApplicationId) {
+        denyApplication(currentApplicationId);
+      }
+    });
   });
 
-  // Setup navigation
-  function setupNavigation(currentUser) {
-    const navContainer = document.querySelector('nav ul');
-    if (!navContainer) return;
+  // Open tag selector modal
+  function openTagSelector() {
+    populateTagSelector('tagsListContainer', selectedTags);
+    document.getElementById('tagSelectorModal').style.display = 'flex';
+  }
 
-    // Check if the logout link already exists
-    const existingLogoutLink = document.getElementById('logout-link');
+  // Close tag selector modal
+  function closeTagSelector() {
+    document.getElementById('tagSelectorModal').style.display = 'none';
+  }
 
-    if (currentUser && !existingLogoutLink) {
-      // Create the welcome text element
-      const welcomeItem = document.createElement('li');
-      welcomeItem.className = 'welcome-text';
-      welcomeItem.textContent = `Welcome, ${currentUser.companyName || 'Employer'}`;
+  // Open edit tag selector modal
+  function openEditTagSelector() {
+    populateTagSelector('editTagsListContainer', editingSelectedTags);
+    document.getElementById('editTagSelectorModal').style.display = 'flex';
+  }
 
-      // Create logout link
-      const logoutItem = document.createElement('li');
-      const logoutLink = document.createElement('a');
-      logoutLink.href = '#';
-      logoutLink.textContent = 'Logout';
-      logoutLink.id = 'logout-link';
-      logoutLink.addEventListener('click', logout);
-      logoutItem.appendChild(logoutLink);
+  // Close edit tag selector modal
+  function closeEditTagSelector() {
+    document.getElementById('editTagSelectorModal').style.display = 'none';
+  }
 
-      // Add to navigation
-      navContainer.appendChild(welcomeItem);
-      navContainer.appendChild(logoutItem);
+  // Close student application modal
+  function closeStudentApplicationModal() {
+    document.getElementById('studentApplicationModal').style.display = 'none';
+    currentApplicationId = null;
+  }
+
+  // Populate tag selector with all available tags
+  function populateTagSelector(containerId, currentTags) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    allTags.sort().forEach(tag => {
+      const isChecked = currentTags.includes(tag);
+
+      const tagElement = document.createElement('div');
+      tagElement.className = 'tag-option';
+      tagElement.innerHTML = `
+        <input type="checkbox" id="${containerId}-${tag.replace(/\s+/g, '-')}" ${isChecked ? 'checked' : ''}>
+        <label for="${containerId}-${tag.replace(/\s+/g, '-')}">${tag}</label>
+      `;
+      container.appendChild(tagElement);
+    });
+  }
+
+  // Filter tags based on search input
+  function filterTags(searchTerm, containerId) {
+    const container = document.getElementById(containerId);
+    const tagOptions = container.querySelectorAll('.tag-option');
+
+    searchTerm = searchTerm.toLowerCase();
+
+    tagOptions.forEach(option => {
+      const label = option.querySelector('label').textContent.toLowerCase();
+      if (label.includes(searchTerm)) {
+        option.style.display = 'flex';
+      } else {
+        option.style.display = 'none';
+      }
+    });
+  }
+
+  // Add selected tags from the modal to the form
+  function addSelectedTags() {
+    selectedTags = [];
+    const tagOptions = document.getElementById('tagsListContainer').querySelectorAll('.tag-option input[type="checkbox"]:checked');
+
+    tagOptions.forEach(option => {
+      const tag = option.nextElementSibling.textContent;
+      selectedTags.push(tag);
+    });
+
+    updateSelectedTagsDisplay();
+    closeTagSelector();
+  }
+
+  // Update selected tags for editing job
+  function updateSelectedTags() {
+    editingSelectedTags = [];
+    const tagOptions = document.getElementById('editTagsListContainer').querySelectorAll('.tag-option input[type="checkbox"]:checked');
+
+    tagOptions.forEach(option => {
+      const tag = option.nextElementSibling.textContent;
+      editingSelectedTags.push(tag);
+    });
+
+    updateEditSelectedTagsDisplay();
+    closeEditTagSelector();
+  }
+
+  // Update the display of selected tags
+  function updateSelectedTagsDisplay() {
+    const container = document.getElementById('selected-tags-display');
+    container.innerHTML = '';
+
+    if (selectedTags.length === 0) {
+      container.innerHTML = '<span class="empty-tags-message">No tags selected (click to add tags)</span>';
+      return;
+    }
+
+    selectedTags.forEach(tag => {
+      const tagElement = document.createElement('div');
+      tagElement.className = 'tag';
+      tagElement.innerHTML = `
+        ${tag}
+        <span class="remove-tag" onclick="removeTag('${tag}')">&times;</span>
+      `;
+      container.appendChild(tagElement);
+    });
+
+    // Update hidden input for form submission
+    document.getElementById('jobTags').value = JSON.stringify(selectedTags);
+  }
+
+  // Update the display of selected tags in edit mode
+  function updateEditSelectedTagsDisplay() {
+    const container = document.getElementById('edit-selected-tags-display');
+    container.innerHTML = '';
+
+    if (editingSelectedTags.length === 0) {
+      container.innerHTML = '<span class="empty-tags-message">No tags selected (click to add tags)</span>';
+      return;
+    }
+
+    editingSelectedTags.forEach(tag => {
+      const tagElement = document.createElement('div');
+      tagElement.className = 'tag';
+      tagElement.innerHTML = `
+        ${tag}
+        <span class="remove-tag" onclick="removeEditTag('${tag}')">&times;</span>
+      `;
+      container.appendChild(tagElement);
+    });
+
+    // Update hidden input for form submission
+    document.getElementById('edit-job-tags').value = JSON.stringify(editingSelectedTags);
+  }
+
+  // Remove a tag from selected tags
+  function removeTag(tag) {
+    selectedTags = selectedTags.filter(t => t !== tag);
+    updateSelectedTagsDisplay();
+  }
+
+  // Remove a tag from editing selected tags
+  function removeEditTag(tag) {
+    editingSelectedTags = editingSelectedTags.filter(t => t !== tag);
+    updateEditSelectedTagsDisplay();
+  }
+
+  // Load profile information
+  function loadProfileInfo(user) {
+    // Set profile photo if it exists
+    if (user.profilePhoto) {
+      const profilePhotoContainer = document.getElementById('profile-photo-container');
+      profilePhotoContainer.innerHTML = `<img src="${user.profilePhoto}" alt="Company Logo"><div class="edit-overlay">Edit Photo</div>`;
+      profilePhotoContainer.classList.remove('placeholder');
+    }
+
+    // Set values in profile view
+    document.getElementById('profile-company-name').textContent = user.companyName || 'Company Name';
+    document.getElementById('profile-email').innerHTML = `Email: <span>${user.email || '--'}</span>`;
+    document.getElementById('profile-phone').innerHTML = `Phone: <span>${user.phone || '--'}</span>`;
+
+    // Populate edit form
+    document.getElementById('edit-company-name').value = user.companyName || '';
+    document.getElementById('edit-email').value = user.email || '';
+    document.getElementById('edit-phone').value = user.phone || '';
+    document.getElementById('edit-company-description').value = user.companyDescription || '';
+  }
+
+  // Show edit profile form
+  function showEditProfile() {
+    document.getElementById('edit-profile-form').style.display = 'block';
+  }
+
+  // Cancel edit profile
+  function cancelEditProfile() {
+    document.getElementById('edit-profile-form').style.display = 'none';
+  }
+
+  // Update profile information
+  function updateProfileInfo() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    // Get updated values
+    currentUser.companyName = document.getElementById('edit-company-name').value;
+    currentUser.email = document.getElementById('edit-email').value;
+    currentUser.phone = document.getElementById('edit-phone').value;
+    currentUser.companyDescription = document.getElementById('edit-company-description').value;
+
+    // Update session storage
+    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+    // Update localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const employerIndex = users.employers.findIndex(e => e.email === currentUser.email || (currentUser.oldEmail && e.email === currentUser.oldEmail));
+
+    if (employerIndex !== -1) {
+      users.employers[employerIndex] = { ...users.employers[employerIndex], ...currentUser };
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    // Update profile display
+    loadProfileInfo(currentUser);
+
+    // Hide edit form
+    document.getElementById('edit-profile-form').style.display = 'none';
+
+    alert('Profile updated successfully!');
+  }
+
+  // Load employer's job listings
+  function loadEmployerListings(employer) {
+    // Get all jobs (both pending and approved)
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    // Filter for this employer's jobs
+    const employerPendingJobs = pendingJobs.filter(job => job.employerId === employer.email);
+    const employerApprovedJobs = approvedJobs.filter(job => job.employerId === employer.email);
+
+    // Combine all jobs
+    const allEmployerJobs = [...employerPendingJobs, ...employerApprovedJobs];
+
+    // Sort by dateSubmitted (most recent first)
+    allEmployerJobs.sort((a, b) => new Date(b.dateSubmitted) - new Date(a.dateSubmitted));
+
+    if (allEmployerJobs.length > 0) {
+      document.getElementById('no-listings').style.display = 'none';
+
+      let listingsHTML = '';
+      allEmployerJobs.forEach(job => {
+        const submittedDate = new Date(job.dateSubmitted).toLocaleDateString();
+        const statusClass = job.status === 'approved' ? 'status-approved' : 'status-pending';
+        const statusText = job.status === 'approved' ? 'Approved' : 'Pending';
+        const tagDisplay = job.tags && job.tags.length > 0 ?
+                `<p><strong>Tags:</strong> ${job.tags.slice(0, 3).join(', ')}${job.tags.length > 3 ? '...' : ''}</p>` :
+                '';
+
+        listingsHTML += `
+          <div class="application-item" onclick="openJobModal('${job.id}')">
+            <h3>${job.title}</h3>
+            <div class="application-details">
+              <p><strong>Type:</strong> ${job.type}</p>
+              <p><strong>Salary:</strong> ${job.salary}</p>
+              <p><strong>Submitted:</strong> ${submittedDate}</p>
+              <p><strong>Status:</strong> <span class="${statusClass}">${statusText}</span></p>
+              ${tagDisplay}
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('listings-list').innerHTML = listingsHTML;
+    } else {
+      document.getElementById('no-listings').style.display = 'block';
     }
   }
 
-  // Load applications for employers - UPDATED to always get fresh data from localStorage
+  // Open the job details modal for editing
+  function openJobModal(jobId) {
+    // Get job details
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    // Find the job in either array
+    let job = pendingJobs.find(j => j.id === jobId);
+    if (!job) {
+      job = approvedJobs.find(j => j.id === jobId);
+    }
+
+    if (!job) {
+      alert('Job details not found.');
+      return;
+    }
+
+    // Populate the form with job details
+    document.getElementById('edit-job-id').value = job.id;
+    document.getElementById('edit-job-title').value = job.title;
+    document.getElementById('edit-job-type').value = job.type;
+    document.getElementById('edit-job-salary').value = job.salary;
+    document.getElementById('edit-job-location').value = job.location || '';
+
+    // Handle the job details field - combine description and requirements if needed
+    if (job.details) {
+      document.getElementById('edit-job-details').value = job.details;
+    } else if (job.description) {
+      // For backwards compatibility with old format
+      let combinedDetails = job.description;
+      if (job.requirements) {
+        combinedDetails += '\n\nRequirements:\n' + job.requirements;
+      }
+      document.getElementById('edit-job-details').value = combinedDetails;
+    } else {
+      document.getElementById('edit-job-details').value = '';
+    }
+
+    // Load job tags for editing
+    editingSelectedTags = job.tags || [];
+    updateEditSelectedTagsDisplay();
+
+    // Show the modal
+    document.getElementById('jobDetailsModal').style.display = 'block';
+  }
+
+  // Close the job details modal
+  function closeJobModal() {
+    document.getElementById('jobDetailsModal').style.display = 'none';
+  }
+
+  // Update a job listing
+  function updateJob() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    const jobId = document.getElementById('edit-job-id').value;
+
+    // Get all jobs
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    // Find the job in either array
+    let jobIndex = -1;
+    let isApproved = false;
+
+    jobIndex = pendingJobs.findIndex(j => j.id === jobId);
+    if (jobIndex === -1) {
+      jobIndex = approvedJobs.findIndex(j => j.id === jobId);
+      if (jobIndex !== -1) {
+        isApproved = true;
+      }
+    }
+
+    if (jobIndex === -1) {
+      alert('Job not found');
+      return;
+    }
+
+    // Get job data from form
+    const updatedJobData = {
+      id: jobId,
+      title: document.getElementById('edit-job-title').value,
+      type: document.getElementById('edit-job-type').value,
+      salary: document.getElementById('edit-job-salary').value,
+      location: document.getElementById('edit-job-location').value,
+      details: document.getElementById('edit-job-details').value,
+      company: currentUser.companyName,
+      employerId: currentUser.email,
+      dateSubmitted: new Date().toISOString(),
+      tags: editingSelectedTags, // Add updated tags
+      employerPhoto: currentUser.profilePhoto // Add employer photo
+    };
+
+    // If job was previously approved, mark it as an update
+    if (isApproved) {
+      // First, remove the job from approved jobs
+      const originalJob = approvedJobs[jobIndex];
+      approvedJobs.splice(jobIndex, 1);
+      localStorage.setItem('approvedJobs', JSON.stringify(approvedJobs));
+
+      // Add it to pending jobs with the updateFlag
+      updatedJobData.status = 'pending';
+      updatedJobData.previouslyApproved = true;
+      updatedJobData.originalId = originalJob.id;
+
+      pendingJobs.push(updatedJobData);
+      localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+
+      // Update applications that use this job ID to mark them as needing update
+      updateApplicationsForJob(jobId);
+
+      alert('Your job has been updated and sent for admin approval.');
+    } else {
+      // For pending jobs, just update the existing record
+      pendingJobs[jobIndex] = { ...pendingJobs[jobIndex], ...updatedJobData };
+      localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+
+      alert('Your pending job listing has been updated.');
+    }
+
+    // Close the modal
+    closeJobModal();
+
+    // Refresh the listings
+    loadEmployerListings(currentUser);
+  }
+
+  // Delete a job listing
+  function deleteJob() {
+    if (!confirm('Are you sure you want to delete this job listing? This action cannot be undone.')) {
+      return;
+    }
+
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    const jobId = document.getElementById('edit-job-id').value;
+
+    // Get all jobs
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    // Find and remove the job from either array
+    let jobIndex = pendingJobs.findIndex(j => j.id === jobId);
+    let isApproved = false;
+
+    if (jobIndex !== -1) {
+      pendingJobs.splice(jobIndex, 1);
+      localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+    } else {
+      jobIndex = approvedJobs.findIndex(j => j.id === jobId);
+      if (jobIndex !== -1) {
+        approvedJobs.splice(jobIndex, 1);
+        localStorage.setItem('approvedJobs', JSON.stringify(approvedJobs));
+        isApproved = true;
+      }
+    }
+
+    if (jobIndex === -1) {
+      alert('Job not found');
+      return;
+    }
+
+    // If the job was approved, also remove applications for this job
+    if (isApproved) {
+      removeApplicationsForJob(jobId);
+    }
+
+    // Close the modal
+    closeJobModal();
+
+    // Refresh the listings
+    loadEmployerListings(currentUser);
+
+    alert('Job listing has been deleted successfully.');
+  }
+
+  // Update applications when a job is updated and sent for re-approval
+  function updateApplicationsForJob(jobId) {
+    // Get all applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+
+    // Mark applications for this job as "awaiting update"
+    applications.forEach(app => {
+      if (app.jobId === jobId) {
+        app.awaitingUpdate = true;
+      }
+    });
+
+    localStorage.setItem('applications', JSON.stringify(applications));
+
+    // Update student application records in their profiles
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+
+    users.students.forEach(student => {
+      if (student.applications) {
+        student.applications.forEach(app => {
+          if (app.jobId === jobId) {
+            app.awaitingUpdate = true;
+          }
+        });
+      }
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Update current session user if applicable
+    const currentSessionUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentSessionUser && currentSessionUser.type === 'student' && currentSessionUser.applications) {
+      currentSessionUser.applications.forEach(app => {
+        if (app.jobId === jobId) {
+          app.awaitingUpdate = true;
+        }
+      });
+      sessionStorage.setItem('currentUser', JSON.stringify(currentSessionUser));
+    }
+  }
+
+  // Remove applications when a job is deleted
+  function removeApplicationsForJob(jobId) {
+    // Get all applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+
+    // Remove applications for this job
+    const updatedApplications = applications.filter(app => app.jobId !== jobId);
+    localStorage.setItem('applications', JSON.stringify(updatedApplications));
+
+    // Remove application records from student profiles
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+
+    users.students.forEach(student => {
+      if (student.applications) {
+        student.applications = student.applications.filter(app => app.jobId !== jobId);
+      }
+      if (student.savedJobs) {
+        student.savedJobs = student.savedJobs.filter(id => id !== jobId);
+      }
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Update users currently in session if they have this job saved or applied to
+    const currentSessionUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentSessionUser && currentSessionUser.type === 'student') {
+      if (currentSessionUser.applications) {
+        currentSessionUser.applications = currentSessionUser.applications.filter(app => app.jobId !== jobId);
+      }
+      if (currentSessionUser.savedJobs) {
+        currentSessionUser.savedJobs = currentSessionUser.savedJobs.filter(id => id !== jobId);
+      }
+      sessionStorage.setItem('currentUser', JSON.stringify(currentSessionUser));
+    }
+  }
+
+  // Load applications for employers
   function loadEmployerApplications(employer) {
-    // Always get fresh data from localStorage
+    // Get fresh data from localStorage
     const applications = JSON.parse(localStorage.getItem('applications')) || [];
     const employerApplications = applications.filter(app => app.employerId === employer.email);
 
+    // Sort by date applied (most recent first)
+    employerApplications.sort((a, b) => new Date(b.dateApplied) - new Date(a.dateApplied));
+
     if (employerApplications.length > 0) {
-      document.getElementById('no-responses').style.display = 'none';
-      const applicationsListContainer = document.getElementById('student-applications-list');
+      document.getElementById('no-applications').style.display = 'none';
+      const applicationsListContainer = document.getElementById('applications-list');
 
       let applicationsHTML = '';
       employerApplications.forEach(app => {
         const applicationDate = new Date(app.dateApplied).toLocaleDateString();
+        const statusClass = app.status === 'Approved' ? 'status-approved' :
+                app.status === 'Denied' ? 'status-rejected' : 'status-pending';
+        const awaitingUpdateBadge = app.awaitingUpdate ? '<span style="color: orange; font-size: 0.85rem; margin-left: 0.5rem;">(Job pending update approval)</span>' : '';
 
         applicationsHTML += `
-          <div class="application-item card">
-            <h3>${app.jobTitle}</h3>
+          <div class="application-item" onclick="viewStudentApplication('${app.id}')">
+            <h3>${app.jobTitle} ${awaitingUpdateBadge}</h3>
             <div class="application-details">
               <p><strong>Student Name:</strong> ${app.studentName}</p>
               <p><strong>Student ID:</strong> ${app.studentId}</p>
-              <p><strong>Email:</strong> ${app.studentEmail}</p>
-              <p><strong>Grade:</strong> ${app.studentGrade}</p>
               <p><strong>Applied:</strong> ${applicationDate}</p>
+              <p><strong>Status:</strong> <span class="${statusClass}">${app.status}</span></p>
             </div>
           </div>
         `;
@@ -290,12 +1962,260 @@
 
       applicationsListContainer.innerHTML = applicationsHTML;
     } else {
-      document.getElementById('no-responses').style.display = 'block';
-      document.getElementById('student-applications-list').innerHTML = '';
+      document.getElementById('no-applications').style.display = 'block';
+      document.getElementById('applications-list').innerHTML = '';
     }
   }
 
-  // Page navigation function - UPDATED to reload applications when viewing responses
+  // View student application details
+  function viewStudentApplication(applicationId) {
+    // Get application details
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+    const application = applications.find(app => app.id === applicationId);
+
+    if (!application) {
+      alert('Application details not found.');
+      return;
+    }
+
+    // Set current application ID for approve/deny functions
+    currentApplicationId = applicationId;
+
+    // Get student details
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const student = users.students.find(s => s.studentId === application.studentId);
+
+    if (!student) {
+      alert('Student details not found.');
+      return;
+    }
+
+    // Create content HTML
+    let detailsHTML = `
+      <div class="student-application-detail">
+        <div class="student-photo">
+          ${student.profilePhoto ?
+            `<img src="${student.profilePhoto}" alt="Student Photo">` :
+            `<i class="fas fa-user"></i>`
+    }
+        </div>
+        <div class="student-info">
+          <h4>${student.name}</h4>
+          <div class="student-detail">
+            <i class="fas fa-id-card"></i>
+            <span>Student ID: ${student.studentId}</span>
+          </div>
+          <div class="student-detail">
+            <i class="fas fa-envelope"></i>
+            <span>Email: ${student.email}</span>
+          </div>
+          <div class="student-detail">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Grade: ${student.grade}</span>
+          </div>
+          ${student.phone ?
+            `<div class="student-detail">
+              <i class="fas fa-phone"></i>
+              <span>Phone: ${student.phone}</span>
+            </div>` : ''
+    }
+          <div class="student-detail">
+            <i class="fas fa-calendar"></i>
+            <span>Applied: ${new Date(application.dateApplied).toLocaleDateString()}</span>
+          </div>
+          <div class="student-detail">
+            <i class="fas fa-briefcase"></i>
+            <span>Position: ${application.jobTitle}</span>
+          </div>
+
+          ${student.resume ?
+            `<div class="student-actions">
+              <button class="btn btn-accent" onclick="downloadStudentResume('${student.studentId}')">
+                <i class="fas fa-file-download"></i> Download Resume
+              </button>
+            </div>` :
+            `<div class="student-detail">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>No resume available</span>
+            </div>`
+    }
+        </div>
+      </div>
+    `;
+
+    // Show or hide approve/deny buttons based on current status
+    const isDecided = application.status === 'Approved' || application.status === 'Denied';
+
+    document.getElementById('approve-application-btn').style.display = isDecided ? 'none' : 'block';
+    document.getElementById('deny-application-btn').style.display = isDecided ? 'none' : 'block';
+
+    // Display details
+    document.getElementById('student-application-content').innerHTML = detailsHTML;
+    document.getElementById('studentApplicationModal').style.display = 'block';
+  }
+
+  // Download student resume
+  function downloadStudentResume(studentId) {
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const student = users.students.find(s => s.studentId === studentId);
+
+    if (!student || !student.resume) {
+      alert('Resume not available.');
+      return;
+    }
+
+    // Create and click a temporary link to download
+    const a = document.createElement('a');
+    a.href = student.resume.data;
+    a.download = student.resume.filename || 'student_resume';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  // Approve student application
+  function approveApplication(applicationId) {
+    // Get applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+    const applicationIndex = applications.findIndex(app => app.id === applicationId);
+
+    if (applicationIndex === -1) {
+      alert('Application not found.');
+      return;
+    }
+
+    // Update application status
+    applications[applicationIndex].status = 'Approved';
+    applications[applicationIndex].responseDate = new Date().toISOString();
+
+    // Save changes
+    localStorage.setItem('applications', JSON.stringify(applications));
+
+    // Update student's application record
+    updateStudentApplicationStatus(applications[applicationIndex]);
+
+    // Close modal and refresh list
+    closeStudentApplicationModal();
+
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    loadEmployerApplications(currentUser);
+
+    alert('Application approved successfully.');
+  }
+
+  // Deny student application
+  function denyApplication(applicationId) {
+    // Get applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+    const applicationIndex = applications.findIndex(app => app.id === applicationId);
+
+    if (applicationIndex === -1) {
+      alert('Application not found.');
+      return;
+    }
+
+    // Update application status
+    applications[applicationIndex].status = 'Denied';
+    applications[applicationIndex].responseDate = new Date().toISOString();
+
+    // Save changes
+    localStorage.setItem('applications', JSON.stringify(applications));
+
+    // Update student's application record
+    updateStudentApplicationStatus(applications[applicationIndex]);
+
+    // Close modal and refresh list
+    closeStudentApplicationModal();
+
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    loadEmployerApplications(currentUser);
+
+    alert('Application denied.');
+  }
+
+  // Update student's application status in their profile
+  function updateStudentApplicationStatus(application) {
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const studentIndex = users.students.findIndex(s => s.studentId === application.studentId);
+
+    if (studentIndex !== -1) {
+      const student = users.students[studentIndex];
+
+      if (student.applications) {
+        const appIndex = student.applications.findIndex(app => app.id === application.id);
+
+        if (appIndex !== -1) {
+          student.applications[appIndex].status = application.status;
+          student.applications[appIndex].responseDate = application.responseDate;
+        }
+      }
+
+      // Update in localStorage
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // Update session if this is the current student
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+      if (currentUser && currentUser.type === 'student' && currentUser.studentId === application.studentId) {
+        if (currentUser.applications) {
+          const appIndex = currentUser.applications.findIndex(app => app.id === application.id);
+
+          if (appIndex !== -1) {
+            currentUser.applications[appIndex].status = application.status;
+            currentUser.applications[appIndex].responseDate = application.responseDate;
+          }
+        }
+
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      }
+    }
+  }
+
+  // Save profile photo
+  function saveProfilePhoto(photoData) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    // Add photo to user data
+    currentUser.profilePhoto = photoData;
+
+    // Update session storage
+    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+    // Update localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const employerIndex = users.employers.findIndex(e => e.email === currentUser.email);
+
+    if (employerIndex !== -1) {
+      users.employers[employerIndex].profilePhoto = photoData;
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    // Update employer photo in all job listings
+    updateEmployerPhotoInJobs(currentUser.email, photoData);
+  }
+
+  // Update employer photo in all job listings
+  function updateEmployerPhotoInJobs(employerEmail, photoData) {
+    // Update in pending jobs
+    const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    pendingJobs.forEach(job => {
+      if (job.employerId === employerEmail) {
+        job.employerPhoto = photoData;
+      }
+    });
+    localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
+
+    // Update in approved jobs
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    approvedJobs.forEach(job => {
+      if (job.employerId === employerEmail) {
+        job.employerPhoto = photoData;
+      }
+    });
+    localStorage.setItem('approvedJobs', JSON.stringify(approvedJobs));
+  }
+
+  // Page navigation function
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
       page.style.display = 'none';
@@ -303,21 +2223,32 @@
     document.getElementById(pageId).style.display = 'block';
 
     // Update active tab in navigation
-    document.querySelectorAll('nav ul li a').forEach(link => {
+    document.querySelectorAll('.dropdown-content a').forEach(link => {
       link.classList.remove('active');
     });
 
     if (pageId === 'home') {
-      document.querySelector('nav ul li a[href="#"]').classList.add('active');
+      document.querySelector('.dropdown-content a#home-link').classList.add('active');
+
+      // Reset form and selected tags when showing the home page
+      if (document.getElementById('post-listing-form').style.display === 'none') {
+        document.getElementById('post-listing-form').style.display = 'block';
+        document.getElementById('submission-confirmation').style.display = 'none';
+        document.getElementById('post-listing-form').reset();
+        selectedTags = [];
+        updateSelectedTagsDisplay();
+      }
     } else {
-      document.querySelector(`nav ul li a[href="#${pageId}"]`)?.classList.add('active');
+      document.querySelector(`.dropdown-content a[onclick="showPage('${pageId}')"]`)?.classList.add('active');
     }
 
-    // If switching to responses tab, reload the applications data
-    if (pageId === 'responses') {
-      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-      if (currentUser && currentUser.type === 'employer') {
+    // Update data based on page
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser && currentUser.type === 'employer') {
+      if (pageId === 'responses') {
         loadEmployerApplications(currentUser);
+      } else if (pageId === 'post-listings') {
+        loadEmployerListings(currentUser);
       }
     }
   }

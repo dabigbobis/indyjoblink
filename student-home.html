@@ -7,69 +7,520 @@
   <title>Student Home - Independence High School Career Center</title>
   <!-- Include the authentication redirect script first -->
   <script src="auth-redirect.js"></script>
-  <link rel="stylesheet" href="home-styles.css">
+  <link rel="stylesheet" href="student-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Split view layout styles */
+    .split-view-container {
+      display: flex;
+      gap: 20px;
+      min-height: calc(100vh - 150px);
+    }
+
+    .job-listings-panel {
+      flex: 0 0 30%;
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+    }
+
+    .job-detail-panel {
+      flex: 0 0 68%;
+      background-color: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+      position: sticky;
+      top: 100px;
+    }
+
+    /* Search bar styles */
+    .header-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      min-height: 50px;
+    }
+
+    .logo {
+      position: absolute;
+      left: 0;
+    }
+
+    .dropdown {
+      position: absolute;
+      right: 0;
+    }
+
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-bar {
+      display: flex;
+      width: 100%;
+      position: relative;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      background: white;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 1rem;
+    }
+
+    #job-search-input {
+      flex: 1;
+      border: none;
+      padding: 12px 15px 12px 45px;
+      font-size: 1rem;
+      outline: none;
+      background: transparent;
+    }
+
+    .search-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-button:hover {
+      background-color: var(--dark);
+    }
+
+    .filter-button {
+      background-color: var(--accent);
+      color: var(--dark);
+      border: none;
+      padding: 12px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-button:hover {
+      background-color: var(--hover-light);
+    }
+
+    /* Filter styles */
+    .filter-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .tag-filter-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tag-filter-dropdown {
+      background-color: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      width: 90%;
+      max-width: 500px;
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    #tag-search-input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .tag-options-container {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+
+    .tag-option {
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .tag-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .tag-option input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .tag-option label {
+      margin: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .selected-filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+      min-height: 30px;
+    }
+
+    .filter-tag {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--accent);
+      color: var(--dark);
+      padding: 3px 8px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+    }
+
+    .filter-tag .remove-tag {
+      margin-left: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--dark);
+      opacity: 0.7;
+    }
+
+    .filter-tag .remove-tag:hover {
+      opacity: 1;
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Mini job listing styles */
+    .mini-job-card {
+      padding: 1rem 1.2rem;
+      background-color: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 1rem;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .mini-job-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .mini-job-card.active {
+      border-left: 4px solid var(--primary);
+      background-color: #f8f8f8;
+    }
+
+    .mini-job-title {
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .mini-job-company {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .mini-job-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .mini-job-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .mini-job-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .mini-job-tag {
+      background-color: #f0f0f0;
+      color: #555;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .job-bookmark {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .job-bookmark.saved {
+      color: var(--primary);
+    }
+
+    /* Detailed job view styles */
+    .job-detail-content {
+      padding: 1.5rem;
+    }
+
+    .job-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 1.5rem;
+    }
+
+    .job-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .job-company {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+    }
+
+    .job-company-name {
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    .job-location {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .job-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .job-tag {
+      background-color: var(--accent);
+      color: var(--dark);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .job-action-buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .job-action-buttons button {
+      padding: 0.5rem 1rem;
+    }
+
+    .job-detail-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .job-detail-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+    }
+
+    /* Status messages for updates */
+    .update-badge {
+      background-color: #ff9800;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+      font-weight: normal;
+    }
+
+    .update-notice {
+      background-color: #fff3e0;
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      border-left: 3px solid #ff9800;
+    }
+
+    @media (max-width: 768px) {
+      .split-view-container {
+        flex-direction: column;
+      }
+
+      .job-listings-panel,
+      .job-detail-panel {
+        flex: 1 1 auto;
+        max-height: none;
+      }
+
+      .header-container {
+        flex-wrap: wrap;
+      }
+
+      .search-container {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+        padding: 0;
+      }
+
+      .logo, .dropdown {
+        flex: 0 0 auto;
+      }
+    }
+  </style>
 </head>
 
 <body>
 <!-- Header -->
 <header>
-  <div class="container">
-    <nav>
-      <div class="logo">
-        <h1>Indy JobLink</h1>
+  <div class="container header-container">
+    <div class="logo">
+      <a href="student-home.html"><img src="New Logo.png" alt="Indy JobLink Logo"></a>
+    </div>
+    <div class="search-container">
+      <div class="search-bar">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="job-search-input" placeholder="Search job title">
+        <button class="filter-button" onclick="toggleTagFilter()">
+          <i class="fas fa-filter"></i> Filter
+        </button>
+        <button class="search-button" onclick="searchJobs()">Search</button>
       </div>
-      <ul>
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="job-listings.html">Job Listings</a></li>
-        <!-- Dynamic logout link will be added by JavaScript -->
-      </ul>
-    </nav>
+      <div class="filter-container">
+        <!-- Modal overlay for filters -->
+        <div id="tag-filter-modal" class="tag-filter-modal">
+          <div id="tag-filter-dropdown" class="tag-filter-dropdown">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Filter by Tags</h3>
+            <input type="text" id="tag-search-input" placeholder="Search tags..." oninput="filterTagOptions()">
+            <div class="tag-options-container" id="tag-options-container">
+              <!-- Will be populated with tags -->
+            </div>
+            <div class="selected-filter-tags" id="selected-filter-tags">
+              <!-- Selected filter tags will appear here -->
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-accent" onclick="clearTagFilters()">Clear All</button>
+              <button class="btn" onclick="closeTagFilter()">Cancel</button>
+              <button class="btn btn-primary" onclick="applyTagFilters()">Apply Filters</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="menu-toggle" onclick="toggleDropdown()">
+        <img src="menu.png" alt="Menu">
+      </button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="student-home.html" class="active">Home</a>
+        <a href="student-myjobs.html">My Jobs</a>
+        <a href="student-profile.html">Profile</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      </div>
+    </div>
   </div>
 </header>
 
-<!-- Home Page -->
+<!-- Home Page Content -->
 <div id="home" class="page active">
-  <section class="hero">
-    <div class="container">
-      <h2>Find Your Perfect Job Opportunity</h2>
-      <p>Our Career Center connects Independence High students with local employers looking for talented
-        individuals. Browse job listings, submit applications, and start your career journey today.</p>
-      <div class="hero-buttons" id="hero-buttons">
-        <a href="job-listings.html" class="btn btn-accent">View Job Listings</a>
-      </div>
-    </div>
-  </section>
-
   <main>
     <div class="container">
-      <!-- My Applications Section -->
-      <div class="card" id="my-applications">
-        <h3>My Applications</h3>
-        <div id="applications-content">
-          <p>You haven't submitted any job applications yet.</p>
-          <p>Browse the listings to find opportunities that match your skills.</p>
-          <p><a href="job-listings.html" class="btn btn-primary">View All Job Listings</a></p>
+      <div class="split-view-container">
+        <!-- Left panel: Job listings -->
+        <div class="job-listings-panel">
+          <p style="margin-bottom: 1rem; font-weight: 500; color: #555;">Top matches for you</p>
+          <div id="mini-job-listings">
+            <!-- Jobs will be populated here by JavaScript -->
+          </div>
+          <div id="no-jobs-message" style="text-align: center; padding: 2rem; display: none;">
+            <p>No job listings are currently available.</p>
+            <p>Check back soon as employers add new opportunities!</p>
+          </div>
         </div>
-      </div>
 
-      <h2 class="section-title">How It Works</h2>
-      <div class="card">
-        <h3>For Students:</h3>
-        <p>Browse through job listings posted by local employers looking for Independence High talent. When you
-          find a position that interests you, simply click "Apply" and submit your information to get started on
-          your career journey.</p>
-      </div>
-
-      <div class="card">
-        <h3>By Counselors:</h3>
-        <ul style="list-style: none; padding-left: 0;">
-          <p>
-            Created by Independence High School to help students connect with employers and gain valuable work experience.
-          </p>
-        </ul>
+        <!-- Right panel: Detailed job view -->
+        <div class="job-detail-panel">
+          <div id="job-detail-content" class="job-detail-content">
+            <!-- Selected job details will be shown here -->
+            <div style="text-align: center; padding: 5rem 1rem; color: #999;">
+              <i class="fas fa-arrow-left" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+              <p>Select a job from the list to view details</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
+</div>
+
+<!-- Application Success Modal -->
+<div id="applicationSuccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+  <div class="modal-content" style="background-color: white; padding: 2rem; border-radius: 8px; max-width: 500px; text-align: center;">
+    <h3>Application Submitted!</h3>
+    <p>Your application has been successfully sent to the employer.</p>
+    <p>You can view the status in your "My Jobs" page.</p>
+    <button class="btn btn-primary" onclick="closeApplicationModal()">Close</button>
+  </div>
 </div>
 
 <!-- Footer -->
@@ -79,16 +530,224 @@
       <div>
         <p>&copy; 2025 Independence High School Career Center</p>
       </div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Contact Guidance Department</a>
-      </div>
     </div>
   </div>
 </footer>
 
 <script>
+  // All available job tags from all listings
+  let availableJobTags = [];
+  // Currently selected filter tags
+  let selectedFilterTags = [];
+
+  // Dropdown menu functions
+  function toggleDropdown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle') && !event.target.matches('.menu-toggle img')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+
+    // Close tag filter modal if clicked on the overlay
+    const tagFilterModal = document.getElementById('tag-filter-modal');
+    if (tagFilterModal && event.target === tagFilterModal) {
+      closeTagFilter();
+    }
+  }
+
+  // Toggle the tag filter modal
+  function toggleTagFilter() {
+    const tagFilterModal = document.getElementById('tag-filter-modal');
+    if (tagFilterModal.style.display === 'none' || !tagFilterModal.style.display) {
+      // If opening, populate tag options
+      populateTagOptions();
+      tagFilterModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+    } else {
+      closeTagFilter();
+    }
+  }
+
+  // Close the tag filter modal
+  function closeTagFilter() {
+    const tagFilterModal = document.getElementById('tag-filter-modal');
+    tagFilterModal.style.display = 'none';
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+
+  // Populate tag options for filtering
+  function populateTagOptions() {
+    // Get all unique tags from all job listings
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+
+    // Create a set of all available tags
+    const tagSet = new Set();
+    approvedJobs.forEach(job => {
+      if (job.tags && Array.isArray(job.tags)) {
+        job.tags.forEach(tag => tagSet.add(tag));
+      }
+    });
+
+    // Convert set to sorted array
+    availableJobTags = Array.from(tagSet).sort();
+
+    // Populate the options container
+    const container = document.getElementById('tag-options-container');
+    container.innerHTML = '';
+
+    if (availableJobTags.length === 0) {
+      container.innerHTML = '<p style="padding: 10px; color: #666;">No tags available</p>';
+      return;
+    }
+
+    availableJobTags.forEach(tag => {
+      const isChecked = selectedFilterTags.includes(tag);
+
+      const tagElement = document.createElement('div');
+      tagElement.className = 'tag-option';
+      tagElement.innerHTML = `
+        <input type="checkbox" id="filter-tag-${tag.replace(/\s+/g, '-')}" ${isChecked ? 'checked' : ''}>
+        <label for="filter-tag-${tag.replace(/\s+/g, '-')}">${tag}</label>
+      `;
+      container.appendChild(tagElement);
+    });
+
+    // Update selected tags display
+    updateSelectedFilterTagsDisplay();
+  }
+
+  // Filter tag options based on search input
+  function filterTagOptions() {
+    const searchTerm = document.getElementById('tag-search-input').value.toLowerCase();
+    const tagOptions = document.getElementById('tag-options-container').querySelectorAll('.tag-option');
+
+    tagOptions.forEach(option => {
+      const label = option.querySelector('label').textContent.toLowerCase();
+      if (label.includes(searchTerm)) {
+        option.style.display = 'flex';
+      } else {
+        option.style.display = 'none';
+      }
+    });
+  }
+
+  // Update display of selected filter tags
+  function updateSelectedFilterTagsDisplay() {
+    const container = document.getElementById('selected-filter-tags');
+    container.innerHTML = '';
+
+    if (selectedFilterTags.length === 0) {
+      container.innerHTML = '<span style="color: #666;">No tags selected</span>';
+      return;
+    }
+
+    selectedFilterTags.forEach(tag => {
+      const tagElement = document.createElement('div');
+      tagElement.className = 'filter-tag';
+      tagElement.innerHTML = `
+        ${tag}
+        <span class="remove-tag" onclick="removeFilterTag('${tag}')">&times;</span>
+      `;
+      container.appendChild(tagElement);
+    });
+  }
+
+  // Remove a tag from selected filter tags
+  function removeFilterTag(tag) {
+    selectedFilterTags = selectedFilterTags.filter(t => t !== tag);
+
+    // Also uncheck the checkbox
+    const checkbox = document.getElementById(`filter-tag-${tag.replace(/\s+/g, '-')}`);
+    if (checkbox) {
+      checkbox.checked = false;
+    }
+
+    updateSelectedFilterTagsDisplay();
+  }
+
+  // Clear all tag filters
+  function clearTagFilters() {
+    selectedFilterTags = [];
+
+    // Uncheck all checkboxes
+    const checkboxes = document.querySelectorAll('#tag-options-container input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    updateSelectedFilterTagsDisplay();
+  }
+
+  // Apply selected tag filters
+  function applyTagFilters() {
+    // Get all checked tags
+    selectedFilterTags = [];
+    const checkedBoxes = document.querySelectorAll('#tag-options-container input[type="checkbox"]:checked');
+
+    checkedBoxes.forEach(checkbox => {
+      const tag = checkbox.nextElementSibling.textContent;
+      selectedFilterTags.push(tag);
+    });
+
+    // Close the modal
+    closeTagFilter();
+
+    // Apply filters and refresh job listings
+    loadJobListings();
+  }
+
+  // Load job listings
+  function loadJobListings() {
+    // Get the approved job listings from localStorage
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    // Filter out jobs that the student has already applied to
+    // or if the application is awaiting an update
+    const appliedJobIds = [];
+    const awaitingUpdateJobIds = [];
+
+    if (currentUser.applications) {
+      currentUser.applications.forEach(app => {
+        if (app.awaitingUpdate) {
+          awaitingUpdateJobIds.push(app.jobId);
+        } else {
+          appliedJobIds.push(app.jobId);
+        }
+      });
+    }
+
+    // Available jobs are those not applied to and not awaiting update
+    let availableJobs = approvedJobs.filter(job =>
+            !appliedJobIds.includes(job.id) && !awaitingUpdateJobIds.includes(job.id)
+    );
+
+    // Apply tag filters if any are selected
+    if (selectedFilterTags.length > 0) {
+      availableJobs = availableJobs.filter(job => {
+        // Job must have tags property as an array
+        if (!job.tags || !Array.isArray(job.tags)) {
+          return false;
+        }
+
+        // Check if job has at least one of the selected tags
+        return selectedFilterTags.some(tag => job.tags.includes(tag));
+      });
+    }
+
+    // Display available jobs
+    displayJobs(availableJobs);
+  }
+
   // Check if user is logged in as a student
   document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
@@ -109,62 +768,353 @@
       return;
     }
 
-    // Add welcome and logout to navigation
-    setupNavigation(currentUser);
+    // Load job listings data
+    loadJobListings();
 
-    // Load student applications
-    loadStudentApplications(currentUser);
+    // Add event listener for search input (search as you type)
+    document.getElementById('job-search-input').addEventListener('keyup', function(event) {
+      // Search on Enter key press
+      if (event.key === 'Enter') {
+        searchJobs();
+      }
+    });
   });
 
-  // Setup navigation
-  function setupNavigation(currentUser) {
-    const navContainer = document.querySelector('nav ul');
-    if (!navContainer) return;
+  // Search jobs function
+  function searchJobs() {
+    const searchTerm = document.getElementById('job-search-input').value.toLowerCase();
+    if (!searchTerm.trim()) {
+      // If search is empty, reload all jobs
+      loadJobListings();
+      return;
+    }
 
-    // Create the welcome text element
-    const welcomeItem = document.createElement('li');
-    welcomeItem.className = 'welcome-text';
-    welcomeItem.textContent = `Welcome, ${currentUser.name || 'Student'}`;
+    // Get the approved job listings from localStorage
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
-    // Create logout link
-    const logoutItem = document.createElement('li');
-    const logoutLink = document.createElement('a');
-    logoutLink.href = '#';
-    logoutLink.textContent = 'Logout';
-    logoutLink.id = 'logout-link';
-    logoutLink.addEventListener('click', logout);
-    logoutItem.appendChild(logoutLink);
+    // Filter out jobs that the student has already applied to
+    // or if the application is awaiting an update
+    const appliedJobIds = [];
+    const awaitingUpdateJobIds = [];
 
-    // Add to navigation
-    navContainer.appendChild(welcomeItem);
-    navContainer.appendChild(logoutItem);
+    if (currentUser.applications) {
+      currentUser.applications.forEach(app => {
+        if (app.awaitingUpdate) {
+          awaitingUpdateJobIds.push(app.jobId);
+        } else {
+          appliedJobIds.push(app.jobId);
+        }
+      });
+    }
+
+    // Available jobs are those not applied to and not awaiting update
+    let availableJobs = approvedJobs.filter(job =>
+            !appliedJobIds.includes(job.id) && !awaitingUpdateJobIds.includes(job.id)
+    );
+
+    // Filter jobs by search term
+    availableJobs = availableJobs.filter(job => {
+      return job.title.toLowerCase().includes(searchTerm) ||
+              (job.location && job.location.toLowerCase().includes(searchTerm)) ||
+              job.company.toLowerCase().includes(searchTerm);
+    });
+
+    // Apply tag filters if any are selected
+    if (selectedFilterTags.length > 0) {
+      availableJobs = availableJobs.filter(job => {
+        // Job must have tags property as an array
+        if (!job.tags || !Array.isArray(job.tags)) {
+          return false;
+        }
+
+        // Check if job has at least one of the selected tags
+        return selectedFilterTags.some(tag => job.tags.includes(tag));
+      });
+    }
+
+    // Display filtered jobs
+    displayJobs(availableJobs);
   }
 
-  // Load student applications
-  function loadStudentApplications(student) {
-    // If student has applications, display them
-    if (student.applications && student.applications.length > 0) {
-      const applicationsDiv = document.getElementById('applications-content');
-      let applicationsHTML = '<div class="applications-list">';
+  // Display jobs from provided array
+  function displayJobs(jobs) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    const miniJobListings = document.getElementById('mini-job-listings');
 
-      // Loop through applications and create HTML
-      student.applications.forEach(app => {
-        const appDate = new Date(app.dateApplied).toLocaleDateString();
-        applicationsHTML += `
-                    <div class="application-item">
-                        <h4>${app.jobTitle}</h4>
-                        <div class="application-meta">
-                            <p><strong>Company:</strong> ${app.company}</p>
-                            <p><strong>Status:</strong> <span class="status-${app.status?.toLowerCase() || 'pending'}">${app.status || 'Pending'}</span></p>
-                            <p><strong>Applied:</strong> ${appDate}</p>
-                        </div>
-                    </div>
-                `;
+    if (jobs.length > 0) {
+      let listingsHTML = '';
+
+      // Create mini job cards for each listing
+      jobs.forEach((job, index) => {
+        const isSaved = (currentUser.savedJobs || []).includes(job.id);
+        const bookmarkClass = isSaved ? 'saved' : '';
+        const activeClass = index === 0 ? 'active' : '';
+
+        const tagsHTML = job.tags && job.tags.length > 0 ?
+                `<div class="mini-job-tags">
+            ${job.tags.slice(0, 3).map(tag => `<span class="mini-job-tag">${tag}</span>`).join('')}
+            ${job.tags.length > 3 ? '<span class="mini-job-tag">...</span>' : ''}
+          </div>` : '';
+
+        listingsHTML += `
+          <div class="mini-job-card ${activeClass}" id="mini-job-${job.id}" onclick="selectJob('${job.id}')">
+            <button class="job-bookmark ${bookmarkClass}" id="bookmark-${job.id}" onclick="toggleSaveJob(event, '${job.id}')">
+              <i class="fas fa-bookmark"></i>
+            </button>
+            <div class="mini-job-title">${job.title}</div>
+            <div class="mini-job-company">${job.company}</div>
+            <div class="mini-job-details">
+              <div class="mini-job-detail">
+                <i class="fas fa-dollar-sign"></i>
+                ${job.salary || 'Not specified'}
+              </div>
+              <div class="mini-job-detail">
+                <i class="fas fa-map-marker-alt"></i>
+                ${job.location || 'Not specified'}
+              </div>
+            </div>
+            ${tagsHTML}
+          </div>
+        `;
       });
 
-      applicationsHTML += '</div>';
-      applicationsDiv.innerHTML = applicationsHTML;
+      miniJobListings.innerHTML = listingsHTML;
+      document.getElementById('no-jobs-message').style.display = 'none';
+
+      // Show the first job details by default
+      if (jobs.length > 0) {
+        selectJob(jobs[0].id);
+      }
+    } else {
+      miniJobListings.innerHTML = '';
+      document.getElementById('no-jobs-message').style.display = 'block';
+      document.getElementById('job-detail-content').innerHTML = `
+        <div style="text-align: center; padding: 5rem 1rem; color: #999;">
+          <p>No jobs match your search.</p>
+          <p>Try different keywords or browse all listings.</p>
+        </div>
+      `;
     }
+  }
+
+  // Select a job to display in the detail panel
+  function selectJob(jobId) {
+    // Update active state in mini listings
+    document.querySelectorAll('.mini-job-card').forEach(card => {
+      card.classList.remove('active');
+    });
+    document.getElementById(`mini-job-${jobId}`).classList.add('active');
+
+    // Get the job details
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    const job = approvedJobs.find(j => j.id === jobId);
+
+    if (!job) {
+      alert('Job details not found.');
+      return;
+    }
+
+    // Format tags if any
+    const tagsHTML = job.tags && job.tags.length > 0 ?
+            `<div class="job-tags">
+        ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
+      </div>` : '';
+
+    // Populate job detail panel
+    let detailHTML = `
+    <div class="job-header">
+      <h1 class="job-title">${job.title}</h1>
+      <div class="job-company">
+        <span class="job-company-name">${job.company}</span>
+      </div>
+      <div class="job-location">
+        <i class="fas fa-map-marker-alt"></i>
+        ${job.location || 'Location not specified'}
+      </div>
+      ${tagsHTML}
+
+      <div class="job-action-buttons">
+        <button class="btn btn-primary" onclick="applyForJob('${job.id}')">Apply now</button>
+        <button class="btn" onclick="toggleSaveJob(event, '${job.id}', true)">
+          <i class="far fa-bookmark"></i> Save
+        </button>
+      </div>
+    </div>
+
+    <div class="job-detail-section">
+      <h3>Description</h3>
+      <div class="job-description">
+        <p>${job.description || 'No description provided.'}</p>
+      </div>
+    </div>
+
+    ${job.requirements ? `
+      <div class="job-detail-section">
+        <h3>Requirements</h3>
+        <div class="job-requirements">
+          <p>${job.requirements}</p>
+        </div>
+      </div>
+    ` : ''}
+  `;
+
+    document.getElementById('job-detail-content').innerHTML = detailHTML;
+  }
+
+  // Toggle save job
+  function toggleSaveJob(event, jobId, fromDetailPanel = false) {
+    // Prevent the click from triggering the parent element's click event
+    event.stopPropagation();
+
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    // Initialize savedJobs array if it doesn't exist
+    if (!currentUser.savedJobs) {
+      currentUser.savedJobs = [];
+    }
+
+    const bookmarkButton = document.getElementById(`bookmark-${jobId}`);
+
+    // Check if job is already saved
+    const jobIndex = currentUser.savedJobs.indexOf(jobId);
+
+    if (jobIndex === -1) {
+      // Job is not saved, add it
+      currentUser.savedJobs.push(jobId);
+      if (bookmarkButton) {
+        bookmarkButton.classList.add('saved');
+      }
+
+      // If toggled from detail panel, refresh the panel
+      if (fromDetailPanel) {
+        selectJob(jobId);
+      }
+    } else {
+      // Job is saved, remove it
+      currentUser.savedJobs.splice(jobIndex, 1);
+      if (bookmarkButton) {
+        bookmarkButton.classList.remove('saved');
+      }
+
+      // If toggled from detail panel, refresh the panel
+      if (fromDetailPanel) {
+        selectJob(jobId);
+      }
+    }
+
+    // Update storage
+    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateUserInStorage(currentUser);
+  }
+
+  // Update user in localStorage
+  function updateUserInStorage(user) {
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const studentIndex = users.students.findIndex(s => s.studentId === user.studentId);
+
+    if (studentIndex !== -1) {
+      // Update existing user
+      users.students[studentIndex] = { ...users.students[studentIndex], ...user };
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+  }
+
+  // Apply for a job
+  function applyForJob(jobId) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser || currentUser.type !== 'student') {
+      alert('Please log in as a student to apply for jobs.');
+      return;
+    }
+
+    // Get the job details
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    const job = approvedJobs.find(j => j.id === jobId);
+
+    if (!job) {
+      alert('Job listing not found.');
+      return;
+    }
+
+    // Create application record
+    const application = {
+      id: 'app_' + Date.now(),
+      jobId: job.id,
+      jobTitle: job.title,
+      company: job.company,
+      employerId: job.employerId,
+      studentId: currentUser.studentId,
+      studentName: currentUser.name,
+      studentEmail: currentUser.email,
+      studentGrade: currentUser.grade,
+      status: 'Pending',
+      dateApplied: new Date().toISOString()
+    };
+
+    // Add to applications in localStorage
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+    applications.push(application);
+    localStorage.setItem('applications', JSON.stringify(applications));
+
+    // Add to student's applications
+    if (!currentUser.applications) {
+      currentUser.applications = [];
+    }
+    currentUser.applications.push({
+      id: application.id,
+      jobId: job.id,
+      jobTitle: job.title,
+      company: job.company,
+      status: 'Pending',
+      dateApplied: application.dateApplied
+    });
+    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+    // Update users in localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+    const studentIndex = users.students.findIndex(s => s.studentId === currentUser.studentId);
+    if (studentIndex !== -1) {
+      users.students[studentIndex].applications = currentUser.applications;
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    // Remove job from listings
+    const miniJobElement = document.getElementById(`mini-job-${jobId}`);
+    if (miniJobElement) {
+      miniJobElement.remove();
+    }
+
+    // Check if there are any mini job cards left
+    const remainingJobCards = document.querySelectorAll('.mini-job-card');
+    if (remainingJobCards.length === 0) {
+      document.getElementById('no-jobs-message').style.display = 'block';
+      document.getElementById('job-detail-content').innerHTML = `
+        <div style="text-align: center; padding: 5rem 1rem; color: #999;">
+          <p>No more job listings available.</p>
+          <p>Check back soon for new opportunities!</p>
+        </div>
+      `;
+    } else {
+      // Select the first remaining job
+      const firstRemainingJobId = remainingJobCards[0].id.replace('mini-job-', '');
+      selectJob(firstRemainingJobId);
+    }
+
+    // Show success message
+    showApplicationSuccess();
+  }
+
+  // Show application success modal
+  function showApplicationSuccess() {
+    const modal = document.getElementById('applicationSuccessModal');
+    modal.style.display = 'flex';
+  }
+
+  // Close application modal
+  function closeApplicationModal() {
+    document.getElementById('applicationSuccessModal').style.display = 'none';
   }
 
   // Logout function

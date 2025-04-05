@@ -7,14 +7,200 @@
   <title>Admin - Pending Listings</title>
   <!-- Include the authentication redirect script first -->
   <script src="auth-redirect.js"></script>
-  <link rel="stylesheet" href="home-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Student theme - Green and white */
+    :root {
+      --primary: #2e7d32;    /* Dark green */
+      --secondary: #4caf50;  /* Medium green */
+      --accent: #81c784;     /* Light green */
+      --light: #f5f5f5;      /* Off-white */
+      --dark: #1b5e20;       /* Very dark green */
+      --hover-green: #388e3c; /* Hover dark green */
+      --hover-light: #c8e6c9; /* Hover light green */
+      --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --card-radius: 8px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header styles with logo */
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      position: relative;
+      top: 4px; /* Shift the logo down by 5px */
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    /* Dropdown menu styles */
+    .menu-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle img {
+      width: 35px;
+      height: 35px;
+    }
+
+    /* Dropdown styles */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 45px;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1000;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+    }
+
+    .dropdown-content a {
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      color: var(--dark);
+      display: block;
+      transition: 0.3s;
+      border-bottom: 1px solid #eee;
+    }
+
+    .dropdown-content a:hover {
+      background-color: var(--hover-light);
+    }
+
+    .dropdown-content a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .show {
+      display: block;
+    }
+
+    main {
+      padding: 2rem 0 4rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--dark);
+      font-size: 1.8rem;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 0.75rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: var(--accent);
+      border-radius: 2px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.8rem;
+      margin-bottom: 1.8rem;
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding-bottom: 0.7rem;
+    }
+
     .pending-job-card {
       margin-bottom: 1rem;
       padding: 1.5rem;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       background-color: white;
+      transition: var(--transition);
+    }
+
+    .pending-job-card:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
     }
 
     .job-header {
@@ -45,12 +231,41 @@
       justify-content: flex-end;
     }
 
+    .btn {
+      display: inline-block;
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      box-shadow: var(--box-shadow);
+      letter-spacing: 0.3px;
+    }
+
+    .btn:hover {
+      background-color: var(--hover-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+
     .btn-approve {
-      background-color: #27ae60;
+      background-color: var(--primary);
     }
 
     .btn-approve:hover {
-      background-color: #219653;
+      background-color: var(--dark);
     }
 
     .btn-deny {
@@ -66,31 +281,298 @@
       padding: 2rem;
       color: #666;
     }
+
+    .update-badge {
+      background-color: #ff9800;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+      font-weight: normal;
+    }
+
+    .update-notice {
+      background-color: #fff3e0;
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      border-left: 3px solid #ff9800;
+    }
+
+    /* Job tags styles */
+    .job-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .job-tag {
+      display: inline-block;
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+    }
+
+    /* Added styles for the diff view */
+    .change-diff {
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .diff-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+
+    .diff-old {
+      background-color: #ffecec;
+      color: #bd2c00;
+      text-decoration: line-through;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    .diff-new {
+      background-color: #eaffea;
+      color: #22863a;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    /* Job status indicators */
+    .status-pending {
+      background-color: #f39c12;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    .status-approved {
+      background-color: #27ae60;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    .status-denied {
+      background-color: #e74c3c;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      border-radius: var(--card-radius);
+      width: 80%;
+      max-width: 600px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: modalFadeIn 0.3s;
+    }
+
+    @keyframes modalFadeIn {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .modal-header {
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      color: var(--dark);
+    }
+
+    .close-modal {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-modal:hover,
+    .close-modal:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-footer {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #e9ecef;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Form input styles */
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: var(--primary);
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.8rem;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      transition: var(--transition);
+      opacity: 0.8;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-wrap: wrap;
+      }
+
+      .job-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .job-date {
+        margin-top: 0.5rem;
+      }
+
+      .approval-actions {
+        flex-direction: column;
+      }
+
+      .approval-actions button {
+        width: 100%;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 10% auto;
+      }
+
+      .modal-footer {
+        flex-direction: column;
+      }
+
+      .modal-footer button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
   </style>
 </head>
 
 <body>
 <!-- Header -->
 <header>
-  <div class="container">
-    <nav>
-      <div class="logo">
-        <h1>Indy JobLink</h1>
+  <div class="container header-container">
+    <div class="logo">
+      <a href="admin-pending.html"><img src="New Logo.png" alt="Indy JobLink Logo"></a>
+    </div>
+    <div class="dropdown">
+      <button class="menu-toggle" onclick="toggleDropdown()">
+        <img src="menu.png" alt="Menu">
+      </button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="javascript:void(0);" onclick="showPage('pending-listings')" id="pending-listings-link" class="active">Pending Listings</a>
+        <a href="javascript:void(0);" onclick="showPage('past-listings')" id="past-listings-link">Past Listings</a>
+        <a href="javascript:void(0);" onclick="logout(event)">Logout</a>
       </div>
-      <ul>
-        <li><a href="#" id="pending-tab" class="active">Pending Listings</a></li>
-        <li><a href="#approved" id="approved-tab">Approved Listings</a></li>
-        <!-- Dynamic logout link will be added by JavaScript -->
-      </ul>
-    </nav>
+    </div>
   </div>
 </header>
 
 <main>
   <div class="container">
-    <h2 class="section-title">Pending Job Listings</h2>
+    <h2 class="section-title" id="page-title">Pending Job Listings</h2>
 
-    <div id="pending-listings-section">
+    <!-- Pending Listings Page -->
+    <div id="pending-listings" class="page active">
       <div id="no-pending-jobs" class="no-pending-jobs">
         <p>There are no pending job listings to review at this time.</p>
         <p>New employer submissions will appear here for your approval.</p>
@@ -101,7 +583,8 @@
       </div>
     </div>
 
-    <div id="approved-listings-section" style="display: none;">
+    <!-- Past Listings Page -->
+    <div id="past-listings" class="page">
       <div class="card">
         <div id="no-approved-jobs" class="no-pending-jobs">
           <p>There are no approved job listings to display.</p>
@@ -115,6 +598,39 @@
   </div>
 </main>
 
+<!-- Denial Reason Modal -->
+<div id="denialReasonModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Provide Reason for Denial</h3>
+      <span class="close-modal" onclick="closeDenialModal()">&times;</span>
+    </div>
+    <p>Please provide a reason why this job listing is being denied. This information will be shared with the employer.</p>
+    <textarea id="denialReason" placeholder="Enter reason for denial..." required></textarea>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeDenialModal()">Cancel</button>
+      <button class="btn btn-deny" onclick="confirmDeny()">Confirm Denial</button>
+    </div>
+  </div>
+</div>
+
+<!-- Job Details Modal for Approved Jobs -->
+<div id="jobDetailsModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Job Details</h3>
+      <span class="close-modal" onclick="closeJobModal()">&times;</span>
+    </div>
+    <div id="job-details-content">
+      <!-- Job details will be loaded here -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeJobModal()">Close</button>
+      <button class="btn btn-deny" id="change-status-btn" onclick="showDenialModal()">Change to Denied</button>
+    </div>
+  </div>
+</div>
+
 <!-- Footer -->
 <footer>
   <div class="container">
@@ -122,16 +638,15 @@
       <div>
         <p>&copy; 2025 Independence High School Career Center</p>
       </div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Contact Guidance Department</a>
-      </div>
     </div>
   </div>
 </footer>
 
 <script>
+  // Global variables
+  let jobIdToDeny = null;
+  let selectedJob = null;
+
   // Check authentication
   document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in and is an admin
@@ -146,64 +661,62 @@
       return;
     }
 
-    // Setup navigation
-    setupNavigation(currentUser);
-
-    // Load pending job listings
+    // Load pending job listings by default
     loadPendingJobs();
-
-    // Set up tab navigation
-    document.getElementById('pending-tab').addEventListener('click', function(e) {
-      e.preventDefault();
-      showPendingListings();
-    });
-
-    document.getElementById('approved-tab').addEventListener('click', function(e) {
-      e.preventDefault();
-      showApprovedListings();
-    });
   });
 
-  // Setup navigation
-  function setupNavigation(currentUser) {
-    const navContainer = document.querySelector('nav ul');
-    if (!navContainer) return;
+  // Dropdown menu functions
+  function toggleDropdown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
 
-    // Check if the logout link already exists
-    const existingLogoutLink = document.getElementById('logout-link');
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle') && !event.target.matches('.menu-toggle img')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
 
-    if (currentUser && !existingLogoutLink) {
-      // Create logout link
-      const logoutItem = document.createElement('li');
-      const logoutLink = document.createElement('a');
-      logoutLink.href = '#';
-      logoutLink.textContent = 'Logout';
-      logoutLink.id = 'logout-link';
-      logoutLink.addEventListener('click', logout);
-      logoutItem.appendChild(logoutLink);
-
-      // Add to navigation
-      navContainer.appendChild(logoutItem);
+    // Close modals if user clicks outside
+    if (event.target.classList.contains('modal')) {
+      closeDenialModal();
+      closeJobModal();
     }
   }
 
-  // Show pending listings tab
-  function showPendingListings() {
-    document.getElementById('pending-listings-section').style.display = 'block';
-    document.getElementById('approved-listings-section').style.display = 'none';
+  // Show appropriate page
+  function showPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+      page.style.display = 'none';
+    });
 
-    // Update section title
-    document.querySelector('.section-title').textContent = "Pending Job Listings";
+    // Show the selected page
+    document.getElementById(pageId).style.display = 'block';
 
-    // Update active tab
-    document.getElementById('approved-tab').classList.remove('active');
-    document.getElementById('pending-tab').classList.add('active');
+    // Update active nav link
+    document.querySelectorAll('.dropdown-content a').forEach(link => {
+      link.classList.remove('active');
+    });
 
-    // Reload pending jobs
-    loadPendingJobs();
+    document.getElementById(`${pageId}-link`).classList.add('active');
+
+    // Update page title
+    if (pageId === 'pending-listings') {
+      document.getElementById('page-title').textContent = 'Pending Job Listings';
+      loadPendingJobs();
+    } else if (pageId === 'past-listings') {
+      document.getElementById('page-title').textContent = 'Past Job Listings';
+      loadApprovedJobs();
+    }
   }
 
-  // Load pending jobs - UPDATED FUNCTION TO FIX DUPLICATION
+  // Load pending jobs
   function loadPendingJobs() {
     const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
 
@@ -221,24 +734,111 @@
 
       uniquePendingJobs.forEach(job => {
         const submittedDate = new Date(job.dateSubmitted).toLocaleDateString();
+        const isUpdate = job.previouslyApproved ? true : false;
+        const updateBadge = isUpdate ? '<span class="update-badge">Updated</span>' : '';
+
+        // If it's an update, fetch the original job to show changes
+        let changeHTML = '';
+        if (isUpdate) {
+          // Get the original job from approved jobs
+          const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+          const originalJob = approvedJobs.find(j => j.id === job.originalId);
+
+          if (originalJob) {
+            // Show differences for key fields that might have changed
+            changeHTML = `<div class="change-diff">
+              <p class="diff-title">Changes from previous version:</p>`;
+
+            // Check title change
+            if (originalJob.title !== job.title) {
+              changeHTML += `<div class="job-detail"><strong>Title:</strong> <span class="diff-old">${originalJob.title}</span> <span class="diff-new">${job.title}</span></div>`;
+            }
+
+            // Check type change
+            if (originalJob.type !== job.type) {
+              changeHTML += `<div class="job-detail"><strong>Type:</strong> <span class="diff-old">${originalJob.type}</span> <span class="diff-new">${job.type}</span></div>`;
+            }
+
+            // Check salary change
+            if (originalJob.salary !== job.salary) {
+              changeHTML += `<div class="job-detail"><strong>Salary:</strong> <span class="diff-old">${originalJob.salary}</span> <span class="diff-new">${job.salary}</span></div>`;
+            }
+
+            // Check location change
+            if (originalJob.location !== job.location) {
+              changeHTML += `<div class="job-detail"><strong>Location:</strong> <span class="diff-old">${originalJob.location || 'Not specified'}</span> <span class="diff-new">${job.location || 'Not specified'}</span></div>`;
+            }
+
+            // Check description change - only show if changed
+            if (originalJob.description !== job.description) {
+              changeHTML += `<div class="job-detail"><strong>Description:</strong> <span class="diff-old">${originalJob.description.substring(0, 100)}${originalJob.description.length > 100 ? '...' : ''}</span> <span class="diff-new">${job.description.substring(0, 100)}${job.description.length > 100 ? '...' : ''}</span></div>`;
+            }
+
+            // Check requirements change - only show if changed
+            if (originalJob.requirements !== job.requirements) {
+              if (originalJob.requirements && job.requirements) {
+                changeHTML += `<div class="job-detail"><strong>Requirements:</strong> <span class="diff-old">${originalJob.requirements.substring(0, 100)}${originalJob.requirements.length > 100 ? '...' : ''}</span> <span class="diff-new">${job.requirements.substring(0, 100)}${job.requirements.length > 100 ? '...' : ''}</span></div>`;
+              } else if (job.requirements && !originalJob.requirements) {
+                changeHTML += `<div class="job-detail"><strong>Requirements:</strong> <span class="diff-new">Added new requirements</span></div>`;
+              } else if (!job.requirements && originalJob.requirements) {
+                changeHTML += `<div class="job-detail"><strong>Requirements:</strong> <span class="diff-old">Removed requirements</span></div>`;
+              }
+            }
+
+            // Check tags change
+            if (JSON.stringify(originalJob.tags || []) !== JSON.stringify(job.tags || [])) {
+              const oldTags = originalJob.tags || [];
+              const newTags = job.tags || [];
+
+              const removedTags = oldTags.filter(tag => !newTags.includes(tag));
+              const addedTags = newTags.filter(tag => !oldTags.includes(tag));
+
+              if (removedTags.length > 0 || addedTags.length > 0) {
+                changeHTML += `<div class="job-detail"><strong>Tags:</strong> `;
+
+                if (removedTags.length > 0) {
+                  changeHTML += `<span class="diff-old">Removed: ${removedTags.join(', ')}</span> `;
+                }
+
+                if (addedTags.length > 0) {
+                  changeHTML += `<span class="diff-new">Added: ${addedTags.join(', ')}</span>`;
+                }
+
+                changeHTML += `</div>`;
+              }
+            }
+
+            changeHTML += `</div>`;
+          }
+        }
 
         pendingJobsHTML += `
           <div class="pending-job-card" id="pending-${job.id}">
-              <div class="job-header">
-                  <h3 class="job-title">${job.title}</h3>
-                  <span class="job-date">Submitted: ${submittedDate}</span>
-              </div>
-              <div class="job-detail"><strong>Company:</strong> ${job.company}</div>
-              <div class="job-detail"><strong>Type:</strong> ${job.type}</div>
-              <div class="job-detail"><strong>Salary:</strong> ${job.salary}</div>
-              <div class="job-detail"><strong>Location:</strong> ${job.location || 'Not specified'}</div>
-              <div class="job-detail"><strong>Description:</strong> ${job.description}</div>
-              ${job.requirements ? `<div class="job-detail"><strong>Requirements:</strong> ${job.requirements}</div>` : ''}
+            <div class="job-header">
+              <h3 class="job-title">${job.title} ${updateBadge}</h3>
+              <span class="job-date">Submitted: ${submittedDate}</span>
+            </div>
+            <div class="job-detail"><strong>Company:</strong> ${job.company}</div>
+            <div class="job-detail"><strong>Type:</strong> ${job.type}</div>
+            <div class="job-detail"><strong>Salary:</strong> ${job.salary}</div>
+            <div class="job-detail"><strong>Location:</strong> ${job.location || 'Not specified'}</div>
+            <div class="job-detail"><strong>Description:</strong> ${job.description}</div>
+            ${job.requirements ? `<div class="job-detail"><strong>Requirements:</strong> ${job.requirements}</div>` : ''}
+            ${job.tags && job.tags.length > 0 ?
+                `<div class="job-detail">
+                <strong>Tags:</strong>
+                <div class="job-tags">
+                  ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join(' ')}
+                </div>
+              </div>` :
+                ''}
+            ${isUpdate ? `<div class="job-detail update-notice"><strong>Notice:</strong> This is an update to a previously approved listing</div>` : ''}
+            ${changeHTML}
 
-              <div class="approval-actions">
-                  <button class="btn btn-approve" onclick="approveJob('${job.id}')">Approve</button>
-                  <button class="btn btn-deny" onclick="denyJob('${job.id}')">Deny</button>
-              </div>
+            <div class="approval-actions">
+              <button class="btn btn-approve" onclick="approveJob('${job.id}')">Approve</button>
+              <button class="btn btn-deny" onclick="initiateDenyJob('${job.id}')">Deny</button>
+            </div>
           </div>
         `;
       });
@@ -250,10 +850,242 @@
     }
   }
 
+  // Load approved jobs
+  function loadApprovedJobs() {
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    const deniedJobs = JSON.parse(localStorage.getItem('deniedJobs')) || [];
+
+    // Combine all past jobs with a status
+    const allPastJobs = [
+      ...approvedJobs.map(job => ({...job, status: 'approved'})),
+      ...deniedJobs.map(job => ({...job, status: 'denied'}))
+    ];
+
+    // Sort by date (newest first)
+    allPastJobs.sort((a, b) => {
+      const dateA = new Date(a.dateApproved || a.dateDenied);
+      const dateB = new Date(b.dateApproved || b.dateDenied);
+      return dateB - dateA;
+    });
+
+    if (allPastJobs.length > 0) {
+      document.getElementById('no-approved-jobs').style.display = 'none';
+      let jobsHTML = '';
+
+      allPastJobs.forEach(job => {
+        const actionDate = new Date(job.dateApproved || job.dateDenied).toLocaleDateString();
+        const statusClass = job.status === 'approved' ? 'status-approved' : 'status-denied';
+        const statusText = job.status === 'approved' ? 'Approved' : 'Denied';
+        const denialReason = job.denialReason ? `<div class="job-detail update-notice"><strong>Denial Reason:</strong> ${job.denialReason}</div>` : '';
+
+        // Display tags if they exist
+        const tagsHTML = job.tags && job.tags.length > 0 ?
+                `<div class="job-detail">
+            <strong>Tags:</strong>
+            <div class="job-tags">
+              ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join(' ')}
+            </div>
+          </div>` :
+                '';
+
+        jobsHTML += `
+          <div class="pending-job-card">
+            <div class="job-header">
+              <h3 class="job-title">${job.title}</h3>
+              <span class="job-date">${statusText} on: ${actionDate}</span>
+            </div>
+            <div class="job-detail"><strong>Company:</strong> ${job.company}</div>
+            <div class="job-detail"><strong>Type:</strong> ${job.type}</div>
+            <div class="job-detail"><strong>Salary:</strong> ${job.salary}</div>
+            <div class="job-detail"><strong>Status:</strong> <span class="${statusClass}">${statusText}</span></div>
+            ${tagsHTML}
+            ${denialReason}
+
+            <div class="approval-actions">
+              <button class="btn btn-primary" onclick="viewJobDetails('${job.id}', '${job.status}')">View Details</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('approved-jobs-list').innerHTML = jobsHTML;
+    } else {
+      document.getElementById('no-approved-jobs').style.display = 'block';
+      document.getElementById('approved-jobs-list').innerHTML = '';
+    }
+  }
+
+  // View job details (for approved/denied jobs)
+  function viewJobDetails(jobId, status) {
+    // Find the job in either approved or denied collection
+    let job = null;
+
+    if (status === 'approved') {
+      const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+      job = approvedJobs.find(j => j.id === jobId);
+    } else if (status === 'denied') {
+      const deniedJobs = JSON.parse(localStorage.getItem('deniedJobs')) || [];
+      job = deniedJobs.find(j => j.id === jobId);
+    }
+
+    if (!job) {
+      alert('Job details not found');
+      return;
+    }
+
+    // Store the selected job
+    selectedJob = job;
+
+    // Build the job details HTML
+    let detailsHTML = `
+      <div class="job-detail"><strong>Title:</strong> ${job.title}</div>
+      <div class="job-detail"><strong>Company:</strong> ${job.company}</div>
+      <div class="job-detail"><strong>Type:</strong> ${job.type}</div>
+      <div class="job-detail"><strong>Salary:</strong> ${job.salary}</div>
+      <div class="job-detail"><strong>Location:</strong> ${job.location || 'Not specified'}</div>
+      <div class="job-detail"><strong>Description:</strong> ${job.description}</div>
+      ${job.requirements ? `<div class="job-detail"><strong>Requirements:</strong> ${job.requirements}</div>` : ''}
+    `;
+
+    // Add tags if they exist
+    if (job.tags && job.tags.length > 0) {
+      detailsHTML += `
+        <div class="job-detail">
+          <strong>Tags:</strong>
+          <div class="job-tags">
+            ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join(' ')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Add status information
+    const actionDate = new Date(job.dateApproved || job.dateDenied).toLocaleDateString();
+    const statusClass = status === 'approved' ? 'status-approved' : 'status-denied';
+    const statusText = status === 'approved' ? 'Approved' : 'Denied';
+
+    detailsHTML += `
+      <div class="job-detail" style="margin-top: 15px;"><strong>Status:</strong> <span class="${statusClass}">${statusText}</span></div>
+      <div class="job-detail"><strong>Action Date:</strong> ${actionDate}</div>
+    `;
+
+    // Add denial reason if exists
+    if (job.denialReason) {
+      detailsHTML += `
+        <div class="job-detail update-notice" style="margin-top: 15px;">
+          <strong>Denial Reason:</strong> ${job.denialReason}
+        </div>
+      `;
+    }
+
+    // Update the modal content
+    document.getElementById('job-details-content').innerHTML = detailsHTML;
+
+    // Update the change status button based on current status
+    const changeStatusBtn = document.getElementById('change-status-btn');
+    if (status === 'approved') {
+      changeStatusBtn.textContent = 'Change to Denied';
+      changeStatusBtn.style.display = 'inline-block';
+    } else {
+      changeStatusBtn.style.display = 'none';
+    }
+
+    // Show the modal
+    document.getElementById('jobDetailsModal').style.display = 'flex';
+  }
+
+  // Close the job details modal
+  function closeJobModal() {
+    document.getElementById('jobDetailsModal').style.display = 'none';
+    selectedJob = null;
+  }
+
+  // Show denial reason modal
+  function showDenialModal() {
+    // Clear any previous reason
+    document.getElementById('denialReason').value = '';
+
+    // Show the modal (for both new denials and status changes)
+    document.getElementById('denialReasonModal').style.display = 'flex';
+  }
+
+  // Close denial reason modal
+  function closeDenialModal() {
+    document.getElementById('denialReasonModal').style.display = 'none';
+    jobIdToDeny = null;
+  }
+
+  // Initiate job denial (for pending jobs)
+  function initiateDenyJob(jobId) {
+    jobIdToDeny = jobId;
+    showDenialModal();
+  }
+
+  // Confirm denial after reason is provided
+  function confirmDeny() {
+    const reason = document.getElementById('denialReason').value.trim();
+
+    if (!reason) {
+      alert('Please provide a reason for denial.');
+      return;
+    }
+
+    // Check if this is a status change or new denial
+    if (selectedJob) {
+      // This is a status change from approved to denied
+      changeJobStatus(selectedJob.id, reason);
+    } else if (jobIdToDeny) {
+      // This is a new denial
+      denyJob(jobIdToDeny, reason);
+    }
+
+    // Close the modal
+    closeDenialModal();
+  }
+
+  // Change job status from approved to denied
+  function changeJobStatus(jobId, reason) {
+    // Get the job from approved jobs
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+    const jobIndex = approvedJobs.findIndex(job => job.id === jobId);
+
+    if (jobIndex === -1) {
+      alert('Job not found');
+      return;
+    }
+
+    // Get the job and add denial information
+    const job = approvedJobs[jobIndex];
+    job.status = 'denied';
+    job.dateDenied = new Date().toISOString();
+    job.denialReason = reason;
+
+    // Remove from approved jobs
+    approvedJobs.splice(jobIndex, 1);
+    localStorage.setItem('approvedJobs', JSON.stringify(approvedJobs));
+
+    // Add to denied jobs
+    const deniedJobs = JSON.parse(localStorage.getItem('deniedJobs')) || [];
+    deniedJobs.push(job);
+    localStorage.setItem('deniedJobs', JSON.stringify(deniedJobs));
+
+    // Remove any applications for this job
+    removeApplicationsForJob(jobId);
+
+    alert('Job status has been changed to Denied.');
+
+    // Refresh past listings
+    loadApprovedJobs();
+
+    // Close the job details modal
+    closeJobModal();
+  }
+
   // Approve a job
   function approveJob(jobId) {
     // Get pending jobs
     const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
+    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
     const jobIndex = pendingJobs.findIndex(job => job.id === jobId);
 
     if (jobIndex !== -1) {
@@ -261,12 +1093,31 @@
       job.status = 'approved';
       job.dateApproved = new Date().toISOString();
 
+      // Check if this is an update to an existing job
+      if (job.previouslyApproved && job.originalId) {
+        // Find the original job in the approved list and remove it
+        const originalJobIndex = approvedJobs.findIndex(j => j.id === job.originalId);
+        if (originalJobIndex !== -1) {
+          approvedJobs.splice(originalJobIndex, 1);
+        }
+
+        // Remove the update flag before adding to approved jobs
+        delete job.previouslyApproved;
+        const originalId = job.originalId;
+        delete job.originalId;
+
+        // Add to approved jobs with the same ID as the original
+        job.id = originalId;
+
+        // Update applications that were marked as awaiting update
+        updateApplicationsAfterApproval(originalId);
+      }
+
       // Remove from pending jobs
       pendingJobs.splice(jobIndex, 1);
       localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
 
       // Add to approved jobs
-      const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
       approvedJobs.push(job);
       localStorage.setItem('approvedJobs', JSON.stringify(approvedJobs));
 
@@ -285,8 +1136,8 @@
     }
   }
 
-  // Deny a job
-  function denyJob(jobId) {
+  // Deny a job with a reason
+  function denyJob(jobId, reason) {
     // Get pending jobs
     const pendingJobs = JSON.parse(localStorage.getItem('pendingJobs')) || [];
     const jobIndex = pendingJobs.findIndex(job => job.id === jobId);
@@ -294,14 +1145,24 @@
     if (jobIndex !== -1) {
       const job = pendingJobs[jobIndex];
 
+      // If this is an update to a previously approved job, handle specially
+      if (job.previouslyApproved && job.originalId) {
+        // Keep the original job in approved jobs
+        // Just need to update applications to remove awaiting update flag
+        updateApplicationsAfterDenial(job.originalId);
+      }
+
+      // Add denial reason and status
+      job.status = 'denied';
+      job.dateDenied = new Date().toISOString();
+      job.denialReason = reason;
+
       // Remove from pending jobs
       pendingJobs.splice(jobIndex, 1);
       localStorage.setItem('pendingJobs', JSON.stringify(pendingJobs));
 
-      // Add to denied jobs (optional - for record keeping)
+      // Add to denied jobs
       const deniedJobs = JSON.parse(localStorage.getItem('deniedJobs')) || [];
-      job.status = 'denied';
-      job.dateDenied = new Date().toISOString();
       deniedJobs.push(job);
       localStorage.setItem('deniedJobs', JSON.stringify(deniedJobs));
 
@@ -320,52 +1181,121 @@
     }
   }
 
-  // Show approved listings
-  function showApprovedListings() {
-    document.getElementById('pending-listings-section').style.display = 'none';
-    document.getElementById('approved-listings-section').style.display = 'block';
+  // Update applications after a job update is approved
+  function updateApplicationsAfterApproval(jobId) {
+    // Get all applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
 
-    // Update section title
-    document.querySelector('.section-title').textContent = "Approved Job Listings";
+    // Remove awaiting update flag for this job
+    applications.forEach(app => {
+      if (app.jobId === jobId && app.awaitingUpdate) {
+        delete app.awaitingUpdate;
+      }
+    });
 
-    // Update active tab
-    document.getElementById('pending-tab').classList.remove('active');
-    document.getElementById('approved-tab').classList.add('active');
+    localStorage.setItem('applications', JSON.stringify(applications));
 
-    // Load approved jobs
-    loadApprovedJobs();
+    // Update student application records in their profiles
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+
+    users.students.forEach(student => {
+      if (student.applications) {
+        student.applications.forEach(app => {
+          if (app.jobId === jobId && app.awaitingUpdate) {
+            delete app.awaitingUpdate;
+          }
+        });
+      }
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Update any current session user if applicable
+    const currentSessionUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentSessionUser && currentSessionUser.type === 'student' && currentSessionUser.applications) {
+      currentSessionUser.applications.forEach(app => {
+        if (app.jobId === jobId && app.awaitingUpdate) {
+          delete app.awaitingUpdate;
+        }
+      });
+      sessionStorage.setItem('currentUser', JSON.stringify(currentSessionUser));
+    }
   }
 
-  // Load approved jobs
-  function loadApprovedJobs() {
-    const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
+  // Update applications after a job update is denied
+  function updateApplicationsAfterDenial(jobId) {
+    // Get all applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
 
-    if (approvedJobs.length > 0) {
-      document.getElementById('no-approved-jobs').style.display = 'none';
-      let approvedJobsHTML = '';
+    // Remove awaiting update flag for this job
+    applications.forEach(app => {
+      if (app.jobId === jobId && app.awaitingUpdate) {
+        delete app.awaitingUpdate;
+      }
+    });
 
-      approvedJobs.forEach(job => {
-        const approvedDate = new Date(job.dateApproved).toLocaleDateString();
+    localStorage.setItem('applications', JSON.stringify(applications));
 
-        approvedJobsHTML += `
-                        <div class="job-card">
-                            <div class="job-info">
-                                <h3>${job.title}</h3>
-                                <div class="job-meta">
-                                    <p><strong>Company:</strong> ${job.company}</p>
-                                    <p><strong>Type:</strong> ${job.type}</p>
-                                    <p><strong>Salary:</strong> ${job.salary}</p>
-                                    <p><strong>Approved:</strong> ${approvedDate}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+    // Update student application records
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+
+    users.students.forEach(student => {
+      if (student.applications) {
+        student.applications.forEach(app => {
+          if (app.jobId === jobId && app.awaitingUpdate) {
+            delete app.awaitingUpdate;
+          }
+        });
+      }
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Update current session user if applicable
+    const currentSessionUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentSessionUser && currentSessionUser.type === 'student' && currentSessionUser.applications) {
+      currentSessionUser.applications.forEach(app => {
+        if (app.jobId === jobId && app.awaitingUpdate) {
+          delete app.awaitingUpdate;
+        }
       });
+      sessionStorage.setItem('currentUser', JSON.stringify(currentSessionUser));
+    }
+  }
 
-      document.getElementById('approved-jobs-list').innerHTML = approvedJobsHTML;
-    } else {
-      document.getElementById('no-approved-jobs').style.display = 'block';
-      document.getElementById('approved-jobs-list').innerHTML = '';
+  // Remove applications when a job is denied or status changed
+  function removeApplicationsForJob(jobId) {
+    // Get all applications
+    const applications = JSON.parse(localStorage.getItem('applications')) || [];
+
+    // Remove applications for this job
+    const updatedApplications = applications.filter(app => app.jobId !== jobId);
+    localStorage.setItem('applications', JSON.stringify(updatedApplications));
+
+    // Remove application records from student profiles
+    const users = JSON.parse(localStorage.getItem('users')) || { students: [], employers: [], admins: [] };
+
+    users.students.forEach(student => {
+      if (student.applications) {
+        student.applications = student.applications.filter(app => app.jobId !== jobId);
+      }
+      if (student.savedJobs) {
+        student.savedJobs = student.savedJobs.filter(id => id !== jobId);
+      }
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Update users currently in session if they have this job saved or applied to
+    const currentSessionUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentSessionUser && currentSessionUser.type === 'student') {
+      if (currentSessionUser.applications) {
+        currentSessionUser.applications = currentSessionUser.applications.filter(app => app.jobId !== jobId);
+      }
+      if (currentSessionUser.savedJobs) {
+        currentSessionUser.savedJobs = currentSessionUser.savedJobs.filter(id => id !== jobId);
+      }
+      sessionStorage.setItem('currentUser', JSON.stringify(currentSessionUser));
     }
   }
 
