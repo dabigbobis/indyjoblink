@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname.split('/').pop();
 
     // If no user is logged in and not on login page, redirect to login
-    if (!currentUser && currentPage !== 'login.html') {
-        window.location.href = 'login.html';
+    if (!currentUser && currentPage !== 'index.html') {
+        window.location.href = 'index.html';
         return;
     }
 
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // If anyone on login page, redirect to appropriate home
-        if (currentPage === 'login.html') {
+        if (currentPage === 'index.html') {
             if (currentUser.type === 'student') {
                 window.location.href = 'student-home.html';
             } else if (currentUser.type === 'employer') {

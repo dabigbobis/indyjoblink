@@ -401,6 +401,35 @@
       border-left: 3px solid #ff9800;
     }
 
+    /* Employer photo */
+    .employer-photo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-right: 10px;
+    }
+
+    .employer-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .employer-photo i {
+      font-size: 1.5rem;
+      color: #999;
+    }
+
+    .job-company .employer-photo {
+      width: 40px;
+      height: 40px;
+    }
+
     @media (max-width: 768px) {
       .split-view-container {
         flex-direction: column;
@@ -711,6 +740,9 @@
     const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
+    // Sort jobs by dateApproved (most recent first)
+    approvedJobs.sort((a, b) => new Date(b.dateApproved) - new Date(a.dateApproved));
+
     // Filter out jobs that the student has already applied to
     // or if the application is awaiting an update
     const appliedJobIds = [];
@@ -793,6 +825,9 @@
     const approvedJobs = JSON.parse(localStorage.getItem('approvedJobs')) || [];
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
+    // Sort jobs by dateApproved (most recent first)
+    approvedJobs.sort((a, b) => new Date(b.dateApproved) - new Date(a.dateApproved));
+
     // Filter out jobs that the student has already applied to
     // or if the application is awaiting an update
     const appliedJobIds = [];
@@ -857,13 +892,19 @@
             ${job.tags.length > 3 ? '<span class="mini-job-tag">...</span>' : ''}
           </div>` : '';
 
+        // Display employer photo if available
+        const employerPhotoHTML = job.employerPhoto ?
+                `<div class="employer-photo" style="width: 30px; height: 30px; display: inline-flex; position: relative; top: 8px;">
+            <img src="${job.employerPhoto}" alt="${job.company}">
+          </div> ` : '';
+
         listingsHTML += `
           <div class="mini-job-card ${activeClass}" id="mini-job-${job.id}" onclick="selectJob('${job.id}')">
             <button class="job-bookmark ${bookmarkClass}" id="bookmark-${job.id}" onclick="toggleSaveJob(event, '${job.id}')">
               <i class="fas fa-bookmark"></i>
             </button>
             <div class="mini-job-title">${job.title}</div>
-            <div class="mini-job-company">${job.company}</div>
+            <div class="mini-job-company">${employerPhotoHTML}${job.company}</div>
             <div class="mini-job-details">
               <div class="mini-job-detail">
                 <i class="fas fa-dollar-sign"></i>
@@ -921,11 +962,21 @@
         ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
       </div>` : '';
 
+    // Display employer photo if available
+    const employerPhotoHTML = job.employerPhoto ?
+            `<div class="employer-photo">
+        <img src="${job.employerPhoto}" alt="${job.company}">
+      </div>` :
+            `<div class="employer-photo">
+        <i class="fas fa-building"></i>
+      </div>`;
+
     // Populate job detail panel
     let detailHTML = `
     <div class="job-header">
       <h1 class="job-title">${job.title}</h1>
       <div class="job-company">
+        ${employerPhotoHTML}
         <span class="job-company-name">${job.company}</span>
       </div>
       <div class="job-location">
@@ -943,20 +994,11 @@
     </div>
 
     <div class="job-detail-section">
-      <h3>Description</h3>
+      <h3>Job Details</h3>
       <div class="job-description">
-        <p>${job.description || 'No description provided.'}</p>
+        <p>${job.details || job.description || 'No details provided.'}</p>
       </div>
     </div>
-
-    ${job.requirements ? `
-      <div class="job-detail-section">
-        <h3>Requirements</h3>
-        <div class="job-requirements">
-          <p>${job.requirements}</p>
-        </div>
-      </div>
-    ` : ''}
   `;
 
     document.getElementById('job-detail-content').innerHTML = detailHTML;

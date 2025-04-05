@@ -11,7 +11,7 @@ function handleHashChange() {
     // First check if user is logged in
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return;
     }
 
@@ -35,7 +35,7 @@ function checkUserLogin() {
 
     // If not logged in, redirect to login page
     if (!currentUser) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return;
     }
 
@@ -208,7 +208,7 @@ function logout(e) {
     sessionStorage.removeItem('currentUser');
 
     // Redirect to login page
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 // Add event listener for hash changes
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Check if user is logged in first
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return;
     }
 
